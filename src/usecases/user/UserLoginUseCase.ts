@@ -1,0 +1,30 @@
+import { UserType } from "../../entities/types/user/UserType";
+import { IUserLoginUseCase } from "../../entities/useCaseInterfaces/user/IUserLoginUseCase";
+import { IUserRepository } from "../../interface adapter/respository/user/IUserRepository";
+import bcrypt from "bcrypt";
+
+
+
+export class UserLoginUseCase implements IUserLoginUseCase {
+   constructor(private iuserrepository: IUserRepository) { }
+
+   async UserLogin(email: string, password: string): Promise<UserType | string> {
+      const data = await this.iuserrepository.FindByEmail(email);
+      //  console.log(data)
+      if (data) {
+
+         if (!data.verified) {
+            return "Account not verified. Please verify your account before logging in.";
+          }
+
+         const isPasswordValid = await bcrypt.compare(password, data.password);
+         if (isPasswordValid) {
+            return data;
+         } else {
+            return "Invalid credential"
+         }
+      } else {
+         return "Invalid credential"
+      }
+   }
+}
