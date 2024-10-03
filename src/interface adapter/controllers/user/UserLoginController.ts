@@ -12,7 +12,7 @@ export class UserLoginController {
                 // Assuming `data.token` contains the JWT token after successful login
                 const token = req.body.token;
     
-                // Set the JWT token as a cookie
+                // Set the JWT token as a cookie(only when login is succesful)
                 res.cookie('access_token', token, {
                     httpOnly: false,
                     maxAge: 60 * 60 * 1000 // Expires in 1 hour

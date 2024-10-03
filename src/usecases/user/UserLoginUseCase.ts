@@ -13,6 +13,10 @@ export class UserLoginUseCase implements IUserLoginUseCase {
       //  console.log(data)
       if (data) {
 
+         if(data.isBlocked){
+            return "Your Account is Blocked"
+         }
+
          if (!data.verified) {
             return "Account not verified. Please verify your account before logging in.";
           }

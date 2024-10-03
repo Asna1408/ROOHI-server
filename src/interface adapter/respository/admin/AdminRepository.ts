@@ -40,7 +40,7 @@ export class AdminRepository implements IAdminRepository{
       }
     
       async getServiceCategories(): Promise<any> {
-        return await ServiceCategoryModel.find({});
+        return await ServiceCategoryModel.find();
       }
     
       async getServiceCategoryById(id: string): Promise<any> {
