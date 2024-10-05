@@ -83,6 +83,11 @@ export class UserRepository implements IUserRepository{
       }
     }
 
+    async EditProfile(updateData: any, _id: string): Promise<any> {
+      return await UserModel.findByIdAndUpdate(_id, { $set: updateData }, { new: true });
+    }
+    
+
     
 
 }

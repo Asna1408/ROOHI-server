@@ -11,9 +11,13 @@ import { UserVerifyOtpUseCase } from "../../../usecases/user/UserVerifyOtpUseCas
 import { ResendOtpController } from "../../../interface adapter/controllers/user/UserResendOtpController";
 import { UserForgetPassUseCase } from "../../../usecases/user/UserForgetPassUseCase";
 import { UserForgetPassController } from "../../../interface adapter/controllers/user/UserForgetPassController";
+import { UserAddPostUseCase } from "../../../usecases/user/UserAddPostUseCase";
+import { PostRepository } from "../../../interface adapter/respository/user/PostRepository";
+import { UserPostController } from "../../../interface adapter/controllers/user/UserPostController";
 
 
 const monoRepository = new UserRepository();
+const mono2Repository = new PostRepository
 
 //register
 const UserRegisterUse = new UserRegisterUseCase(monoRepository)
@@ -38,3 +42,7 @@ export const InjectedUserResendOtpController = new ResendOtpController(UserResen
 //forget password
 const UserForgetPassUse = new UserForgetPassUseCase(monoRepository);
 export const InjectedUserForgetPassController = new UserForgetPassController(UserForgetPassUse);
+
+//AddPost
+const UserAddPostUse = new UserAddPostUseCase(mono2Repository)
+export const InjectedAddPostController = new UserPostController(UserAddPostUse)
