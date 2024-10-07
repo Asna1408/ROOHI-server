@@ -8,21 +8,19 @@ export class UserAddPostUseCase implements UserAddPostUsecaseInterface {
 
     async createService(serviceData: ServiceType): Promise<any> {
         try {
-            // Check if service type exists
+            // Check if the service type exists
             const serviceCategory = await ServiceCategoryModel.findById(serviceData.service_type);
             if (!serviceCategory) {
                 throw new Error('Invalid service type selected');
             }
 
-            // If the service type is valid, proceed to create the service
-            const createdService = await this.ipostrepository.addService(serviceData);
-
-            // Optionally, you can populate the service type on the created service here if your repository method does not do it
-            const populatedService = await this.ipostrepository.getServiceById(createdService._id)
+            // Create a new service entry
+            const newService = await this.ipostrepository.addService(serviceData);
             
+            // Populate the service type field
+            // await newService.populate('service_type'); // Ensure service_type is populated
 
-            // Return the populated service
-            return populatedService;
+            return newService; // Return the populated service
         } catch (error) {
             console.error("Error in UseCase createService:", error);
             throw error;  // Pass error back to the controller

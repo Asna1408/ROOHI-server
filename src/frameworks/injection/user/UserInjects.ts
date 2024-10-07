@@ -14,6 +14,10 @@ import { UserForgetPassController } from "../../../interface adapter/controllers
 import { UserAddPostUseCase } from "../../../usecases/user/UserAddPostUseCase";
 import { PostRepository } from "../../../interface adapter/respository/user/PostRepository";
 import { UserPostController } from "../../../interface adapter/controllers/user/UserPostController";
+import { UserGetAllPostUseCase } from "../../../usecases/user/UserGetAllPost";
+import { UserEditPostUseCase } from "../../../usecases/user/UserEditPostUseCase";
+import { UserDeletePostUseCase } from "../../../usecases/user/UserDeletePostUseCase";
+import { UserGetPostByIdUsecase } from "../../../usecases/user/UserGetPostByIdUsecase";
 
 
 const monoRepository = new UserRepository();
@@ -45,4 +49,17 @@ export const InjectedUserForgetPassController = new UserForgetPassController(Use
 
 //AddPost
 const UserAddPostUse = new UserAddPostUseCase(mono2Repository)
-export const InjectedAddPostController = new UserPostController(UserAddPostUse)
+
+//GetPostByuserId
+const UserGetPostByIdUse =new UserGetAllPostUseCase(mono2Repository)
+
+//GetPostBypostId
+const UserGetPostBypostIdUse = new UserGetPostByIdUsecase(mono2Repository)
+
+//EditPost
+const UserEditPostUse = new UserEditPostUseCase(mono2Repository)
+
+//DeletePost
+const UserDeletePostUse = new UserDeletePostUseCase(mono2Repository)
+
+export const InjectedAddPostController = new UserPostController(UserAddPostUse,UserGetPostByIdUse,UserDeletePostUse,UserGetPostBypostIdUse,UserEditPostUse)

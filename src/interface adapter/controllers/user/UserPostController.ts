@@ -1,10 +1,20 @@
+import mongoose from "mongoose";
 import { UserAddPostUsecaseInterface } from "../../../entities/useCaseInterfaces/user/UserAddPostUsecaseInterface";
 import { Res, Req } from "../../../frameworks/Types/servertype";
+import { UserGetAllPostUseCaseInterface } from "../../../entities/useCaseInterfaces/user/UserGetAllPostInterface";
+import { UserDeletePostUsecaseInterface } from "../../../entities/useCaseInterfaces/user/UserDeletePostUsecaseInterface";
+import { UserEditPostUsecaseInterface } from "../../../entities/useCaseInterfaces/user/UserEditPostUseCaseInterface";
+import { UserGetPostByIdUseCaseInterface } from "../../../entities/useCaseInterfaces/user/UserGetPostByIdUseCaseInterface";
+
 
 export class UserPostController {
-    constructor(private iuserpostaddusecase: UserAddPostUsecaseInterface) {}
+    constructor(private iuserpostaddusecase: UserAddPostUsecaseInterface,
+        private usergetpostusecaseinterface:UserGetAllPostUseCaseInterface,
+        private userdeletepostusercaseinterface:UserDeletePostUsecaseInterface,
+        private usergetpostbyidusecaseinterface:UserGetPostByIdUseCaseInterface,
+        private usereditpostusecaseinterface:UserEditPostUsecaseInterface) {}
 
-    async createService(req: Req, res: Res): Promise<void> {
+    async createService(req: Req, res: Res): Promise<any> {
         try {
             // Log request body for debugging
             console.log("Request body:", req.body);
@@ -12,18 +22,94 @@ export class UserPostController {
             // Extract data from request body
             const { service_name, description, price, provider_id, service_type, availability } = req.body;
 
+            // Validate required fields
             if (!service_name || !description || !price || !provider_id || !service_type || !availability) {
-                 res.status(400).json({ message: "Missing required fields" });
+                return res.status(400).json({ message: "Missing required fields" }); // Return to avoid further execution
             }
 
             const serviceData = req.body;
 
             // Call use case to create service
             const newService = await this.iuserpostaddusecase.createService(serviceData);
-             res.status(201).json({ message: "Service created successfully", service: newService });
+            return res.status(201).json({ message: "Service created successfully", service: newService }); // Return after sending response
         } catch (error) {
             console.error("Error adding service:", error);
-            res.status(500).json({ message: "Internal server error", error: error });
+            return res.status(500).json({ message: "Internal server error", error: error }); // Return after sending response
         }
     }
+
+
+    async GetAllPost(req: Req, res: Res) {
+        try {
+          console.log("Full URL:", req.originalUrl); // Log the full URL
+          console.log("Provider ID from Params:", req.params.providerId); // Log the provider ID from the request
+      
+          const providerId = new mongoose.Types.ObjectId(req.params.providerId);
+          console.log("Converted Provider ID:", providerId); // Ensure correct conversion
+      
+          const services = await this.usergetpostusecaseinterface.GetAllPost(providerId);
+          console.log("Fetched Services:", services); // Log fetched services
+      
+          res.status(200).json(services);
+        } catch (error) {
+          console.error("Error fetching services:", error);
+          res.status(500).json({ message: error });
+        }
+      }
+
+
+      async getPost(req: Req, res: Res) {
+        const { postId } = req.params;
+    
+        try {
+          const post = await this.usergetpostbyidusecaseinterface.getPostById(postId);
+          if (!post) {
+            return res.status(404).json({ message: 'Post not found' });
+          }
+          return res.status(200).json(post);
+        } catch (error) {
+          return res.status(500).json({ message: 'Server error', error:error});
+        }
+      }
+      
+
+      async editPost(req: Req, res: Res): Promise<any> {
+        try {
+            const postId = new mongoose.Types.ObjectId(req.params.postId); // Get the post ID from params
+            const updatedData = req.body; // Updated post data from request body
+
+            // Call use case to update the post
+            const updatedPost = await this.usereditpostusecaseinterface.updatePost(postId, updatedData);
+            
+            if (!updatedPost) {
+                return res.status(404).json({ message: "Post not found" });
+            }
+
+            return res.status(200).json({ message: "Post updated successfully", updatedPost });
+        } catch (error) {
+            console.error("Error updating post:", error);
+            return res.status(500).json({ message: "Internal server error", error });
+        }
+    }
+
+   
+    async deletePost(req: Req, res: Res): Promise<any> {
+        try {
+            const postId = new mongoose.Types.ObjectId(req.params.postId); // Get the post ID from params
+
+            // Call use case to delete the post
+            const deletedPost = await this.userdeletepostusercaseinterface.deletePost(postId);
+            
+            if (!deletedPost) {
+                return res.status(404).json({ message: "Post not found" });
+            }
+
+            return res.status(200).json({ message: "Post deleted successfully" });
+        } catch (error) {
+            console.error("Error deleting post:", error);
+            return res.status(500).json({ message: "Internal server error", error });
+        }
+    }
+      
+    
 }

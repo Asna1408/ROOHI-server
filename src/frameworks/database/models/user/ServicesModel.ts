@@ -10,6 +10,10 @@ const ServiceSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
+    location:{
+        type:String,
+        required:true,
+    },
     price: {
       type: Number,
       required: true,
@@ -17,7 +21,7 @@ const ServiceSchema = new mongoose.Schema({
     provider_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
+      
     },
     service_type: {
       type: mongoose.Schema.Types.ObjectId, 
@@ -28,7 +32,7 @@ const ServiceSchema = new mongoose.Schema({
       type: [Date],
       required: true,
     },
-    image: {
+    images: {
       type: [String], // URL of the service image
       required: true,
     },

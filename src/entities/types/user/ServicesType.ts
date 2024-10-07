@@ -7,7 +7,8 @@ export type ServiceType =  {
     provider_id: mongoose.Types.ObjectId; // References User model
     service_type: mongoose.Types.ObjectId; // References ServiceCategory model
     availability: Date[];
-    image?: string;
+    location:string;
+    images: string[];
     created_at: Date;
     updated_at: Date;
   }
