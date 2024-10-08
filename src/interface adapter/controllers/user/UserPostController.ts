@@ -5,6 +5,9 @@ import { UserGetAllPostUseCaseInterface } from "../../../entities/useCaseInterfa
 import { UserDeletePostUsecaseInterface } from "../../../entities/useCaseInterfaces/user/UserDeletePostUsecaseInterface";
 import { UserEditPostUsecaseInterface } from "../../../entities/useCaseInterfaces/user/UserEditPostUseCaseInterface";
 import { UserGetPostByIdUseCaseInterface } from "../../../entities/useCaseInterfaces/user/UserGetPostByIdUseCaseInterface";
+import { UserGetAllPostInShopUseCaseInterface } from "../../../entities/useCaseInterfaces/user/UserGetAllPostInShopUseCaseInterface";
+import { UserGetSingleServiceUseCaseInterface } from "../../../entities/useCaseInterfaces/user/UserGetSingleServiceUseCaseInterface";
+import { GetServiceAvailabiltyUsecaseInterface } from "../../../entities/useCaseInterfaces/user/GetServiceAvailabiltyUsecaseInterface";
 
 
 export class UserPostController {
@@ -12,7 +15,10 @@ export class UserPostController {
         private usergetpostusecaseinterface:UserGetAllPostUseCaseInterface,
         private userdeletepostusercaseinterface:UserDeletePostUsecaseInterface,
         private usergetpostbyidusecaseinterface:UserGetPostByIdUseCaseInterface,
-        private usereditpostusecaseinterface:UserEditPostUsecaseInterface) {}
+        private usereditpostusecaseinterface:UserEditPostUsecaseInterface,
+        private userfetchallpostusecaseinterface:UserGetAllPostInShopUseCaseInterface,
+        private usergetsingleserviceinterface:UserGetSingleServiceUseCaseInterface,
+      private getserviceavailabilityusecaseInterfcae:GetServiceAvailabiltyUsecaseInterface) {}
 
     async createService(req: Req, res: Res): Promise<any> {
         try {
@@ -75,8 +81,8 @@ export class UserPostController {
 
       async editPost(req: Req, res: Res): Promise<any> {
         try {
-            const postId = new mongoose.Types.ObjectId(req.params.postId); // Get the post ID from params
-            const updatedData = req.body; // Updated post data from request body
+            const postId = new mongoose.Types.ObjectId(req.params.postId); 
+            const updatedData = req.body; 
 
             // Call use case to update the post
             const updatedPost = await this.usereditpostusecaseinterface.updatePost(postId, updatedData);
@@ -111,5 +117,39 @@ export class UserPostController {
         }
     }
       
+    async getAllServices(req: Req, res: Res) :Promise<any>{
+      try {
+        const services = await this.userfetchallpostusecaseinterface.fetchAllServices();
+        res.status(200).json(services);
+      } catch (error) {
+        res.status(500).json({ message: error });
+      }
+    };
+
+
+    //get single service
+    async getsingleService(req: Req, res: Res) {
+      const serviceId = new mongoose.Types.ObjectId(req.params.id); // Assuming the ID comes from the URL
+
+      try {
+          const service = await this.usergetsingleserviceinterface.getsingleservice(serviceId);
+          if (!service) {
+              return res.status(404).json({ message: "Service not found" });
+          }
+          return res.json(service);
+      } catch (error) {
+          return res.status(500).json({ message: error });
+      }
+  }
+
+  async getAvailability(req: Req, res: Res) {
+    try {
+        const { serviceId } = req.params; 
+        const availability = await this.getserviceavailabilityusecaseInterfcae.getdates(serviceId);
+        res.status(200).json(availability);
+    } catch (error) {
+        res.status(400).json({ error: error });
+    }
+}
     
 }

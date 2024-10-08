@@ -1,6 +1,6 @@
 import { NextFunction, Router } from 'express'
 export{ Router} from 'express'
-import { InjectedAddPostController, InjectedGoogleAuthController, InjectedUserForgetPassController, InjectedUserLoginController, InjectedUserRegisterController, InjectedUserResendOtpController, InjectedUserVerifyOtpController } from '../../injection/user/UserInjects';
+import { InjectedPostController, InjectedGoogleAuthController, InjectedUserForgetPassController, InjectedUserLoginController, InjectedUserRegisterController, InjectedUserResendOtpController, InjectedUserVerifyOtpController, InjectedBookingController } from '../../injection/user/UserInjects';
 import { JwtTokenAdapter } from '../../services/JWT/Tokenservice';
 import { Req, Res } from '../../Types/servertype';
 import { ServiceModel } from '../../database/models/user/ServicesModel';
@@ -32,11 +32,16 @@ router.get('/logout', async(req: Req, res: Res)=> {
 
 router.post('/forgot-password',InjectedUserForgetPassController.RequestResetPassword.bind(InjectedUserForgetPassController))
 router.post('/reset-password',InjectedUserForgetPassController.resetPassword.bind(InjectedUserForgetPassController))
-router.post('/uploadpost',InjectedAddPostController.createService.bind(InjectedAddPostController))
-router.get("/getallpost/:providerId",InjectedAddPostController.GetAllPost.bind(InjectedAddPostController))
-router.get("/editpost/:postId",InjectedAddPostController.getPost.bind(InjectedAddPostController))
-router.put('/editpost/:postId', InjectedAddPostController.editPost.bind(InjectedAddPostController));
-router.delete('/deletepost/:postId', InjectedAddPostController.deletePost.bind(InjectedAddPostController));
+router.post('/uploadpost',InjectedPostController.createService.bind(InjectedPostController))
+router.get("/getallpost/:providerId",InjectedPostController.GetAllPost.bind(InjectedPostController))
+router.get("/editpost/:postId",InjectedPostController.getPost.bind(InjectedPostController))
+router.put('/editpost/:postId', InjectedPostController.editPost.bind(InjectedPostController));
+router.delete('/deletepost/:postId', InjectedPostController.deletePost.bind(InjectedPostController));
+router.get('/getallpost',InjectedPostController.getAllServices.bind(InjectedPostController))
+router.get('/servicedetails/:id',InjectedPostController.getsingleService.bind((InjectedPostController)))
+router.post('/booknowcheckout',InjectedBookingController.createCheckoutSession.bind(InjectedBookingController))
+
+router.get('/services/:serviceId/availability',InjectedPostController.getAvailability.bind(InjectedPostController))
 
 
 export default router ;  

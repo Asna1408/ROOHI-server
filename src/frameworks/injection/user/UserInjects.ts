@@ -18,10 +18,18 @@ import { UserGetAllPostUseCase } from "../../../usecases/user/UserGetAllPost";
 import { UserEditPostUseCase } from "../../../usecases/user/UserEditPostUseCase";
 import { UserDeletePostUseCase } from "../../../usecases/user/UserDeletePostUseCase";
 import { UserGetPostByIdUsecase } from "../../../usecases/user/UserGetPostByIdUsecase";
+import { UserGetAllPostInShopUseCase } from "../../../usecases/user/UserGetAllPostInShop";
+import { UserGetSingleServiceUseCase } from "../../../usecases/user/UserGetSingleServiceUseCase";
+import { UserCreateBookingUseCase } from "../../../usecases/user/UserCreateBookingUseCase";
+import {BookingRepository } from "../../../interface adapter/respository/user/BookingRepositor";
+import { BookingController } from "../../../interface adapter/controllers/user/BookingController";
+import { UserCancelBookingUseCase } from "../../../usecases/user/UserCancelBookingUseCase";
+import { GetServiceAvailabiltyUseCase } from "../../../usecases/user/GetServiceAvailabiltyUseCase";
 
 
 const monoRepository = new UserRepository();
-const mono2Repository = new PostRepository
+const mono2Repository = new PostRepository()
+const mono3Repository = new BookingRepository()
 
 //register
 const UserRegisterUse = new UserRegisterUseCase(monoRepository)
@@ -62,4 +70,23 @@ const UserEditPostUse = new UserEditPostUseCase(mono2Repository)
 //DeletePost
 const UserDeletePostUse = new UserDeletePostUseCase(mono2Repository)
 
-export const InjectedAddPostController = new UserPostController(UserAddPostUse,UserGetPostByIdUse,UserDeletePostUse,UserGetPostBypostIdUse,UserEditPostUse)
+//get all post in shop
+const UserGetAllPostInShopUse = new UserGetAllPostInShopUseCase(mono2Repository)
+
+//get singleservice details
+const UserGetSingleServiceUse = new UserGetSingleServiceUseCase(mono2Repository)
+
+//get available dates
+const UserGetAvailableDateUse = new GetServiceAvailabiltyUseCase(mono2Repository)
+
+export const InjectedPostController = new UserPostController(UserAddPostUse,
+    UserGetPostByIdUse,UserDeletePostUse,UserGetPostBypostIdUse,UserEditPostUse,
+    UserGetAllPostInShopUse,UserGetSingleServiceUse,UserGetAvailableDateUse)
+
+
+//bookingcreate
+const UserCreateBookingUse = new UserCreateBookingUseCase(mono3Repository)
+
+export const InjectedBookingController = new BookingController(UserCreateBookingUse)
+
+
