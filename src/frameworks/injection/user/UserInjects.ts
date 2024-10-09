@@ -25,6 +25,7 @@ import {BookingRepository } from "../../../interface adapter/respository/user/Bo
 import { BookingController } from "../../../interface adapter/controllers/user/BookingController";
 import { UserCancelBookingUseCase } from "../../../usecases/user/UserCancelBookingUseCase";
 import { GetServiceAvailabiltyUseCase } from "../../../usecases/user/GetServiceAvailabiltyUseCase";
+import { GetBookedDatesUseCase } from "../../../usecases/user/GetBookedDatesUseCase";
 
 
 const monoRepository = new UserRepository();
@@ -87,6 +88,9 @@ export const InjectedPostController = new UserPostController(UserAddPostUse,
 //bookingcreate
 const UserCreateBookingUse = new UserCreateBookingUseCase(mono3Repository)
 
-export const InjectedBookingController = new BookingController(UserCreateBookingUse)
+//getbookeddates
+const UserGetBookedDateUse = new GetBookedDatesUseCase(mono2Repository,mono3Repository)
+
+export const InjectedBookingController = new BookingController(UserCreateBookingUse,UserGetBookedDateUse)
 
 

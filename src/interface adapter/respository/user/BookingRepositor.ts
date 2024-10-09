@@ -9,8 +9,10 @@ export class BookingRepository implements IBookingRepository{
         return await BookingModel.create(BookingData);
     }
 
-    
-    
+    async getServiceDate(serviceId:string):Promise<any>{
+       return await BookingModel.findById({service_id:serviceId}).select('booking_daate - _id')
+    }
+
 
     
 }

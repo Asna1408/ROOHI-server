@@ -3,11 +3,14 @@ import { UserCancelBookingUseCaseInterface } from "../../../entities/useCaseInte
 import { UserCreateBookingUsecaseInterface } from "../../../entities/useCaseInterfaces/user/UserCreateBookingUsecaseInterface";
 import { Req, Res } from "../../../frameworks/Types/servertype";
 import Stripe from 'stripe';
+import { GetBookedDatesUseCaseInterface } from "../../../entities/useCaseInterfaces/user/GetBookedDatesUseCaseInterface";
 const stripe = new Stripe('sk_test_51Q7VPGGWw2JRPJ2CWnRQe4HqZgOx1J2UqVdGqoSiMZq0QmwtS7vwIESa7lFbAaRxanFMV8zM4oBj4EmsVwh101oC00gl3FNpnb');
   
 
 export class BookingController {
-    constructor(private icreatebookingUsecaseinterface: UserCreateBookingUsecaseInterface){}
+    constructor(private icreatebookingUsecaseinterface: UserCreateBookingUsecaseInterface,
+        private igetdatesusecaseinterface: GetBookedDatesUseCaseInterface
+    ){}
 
     // Controller to create a checkout session
     async createCheckoutSession(req: Req, res: Res) {
@@ -50,6 +53,19 @@ export class BookingController {
             res.status(500).json({ error: err.message });
         }
     }
+
+
+    async getAvailability(req:Req, res:Res) {
+        const { serviceId } = req.params;
+    
+        try {
+          const availabilityData = await this.igetdatesusecaseinterface.getbookeddates(serviceId);
+          res.json(availabilityData);
+        } catch (error) {
+          console.error('Error fetching availability:', error);
+          res.status(500).json({ message: error || 'Server error' });
+        }
+      }
     
 }
 

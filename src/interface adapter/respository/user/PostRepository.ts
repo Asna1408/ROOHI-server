@@ -51,7 +51,7 @@ export class PostRepository implements IPostRepository{
       }
     }
 
-    //get single service
+    //get single service 
     async getsingleservice(serviceId: mongoose.Types.ObjectId): Promise<ServiceType | null| any> {
       try {
           const service = await ServiceModel.findById(serviceId).exec();
