@@ -16,7 +16,7 @@ export class UserRegisterController {
 
             console.log(req.body)
             const result = await this.iuserregisterusecase.UserRegister(user);
-            console.log("signup controller😒😒😒😒😒")
+           
             res.json(result);
         } catch (error) {
             console.log(error);

@@ -62,9 +62,6 @@ export class PostRepository implements IPostRepository{
   }
 
 
-  //update availability array
-  async updateAvailability(serviceId: string, availableDates: Date[]) {
-    return await ServiceModel.findByIdAndUpdate(serviceId, { availability: availableDates });
-}
+  
     
 }

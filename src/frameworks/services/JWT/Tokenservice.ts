@@ -25,7 +25,8 @@ export class JwtTokenAdapter implements Tokenservice {
   }
 
   async verifyToken(req: Req,res: Res,next: NextFunction): Promise<void | NextFunction> {
-    const token = req.cookies.access_token;
+
+    const token = req.cookies.access_token|| req.headers.authorization?.split(" ")[1];
 
     if (!token) {
       return next(errorFun.errorHandler(401, "Unauthorized"));
@@ -36,6 +37,7 @@ export class JwtTokenAdapter implements Tokenservice {
         return next(errorFun.errorHandler(401, "Unauthorized"));
       }
 
+   
       req.body.user = user;
       next();
     });

@@ -25,12 +25,22 @@ import {BookingRepository } from "../../../interface adapter/respository/user/Bo
 import { BookingController } from "../../../interface adapter/controllers/user/BookingController";
 import { UserCancelBookingUseCase } from "../../../usecases/user/UserCancelBookingUseCase";
 import { GetServiceAvailabiltyUseCase } from "../../../usecases/user/GetServiceAvailabiltyUseCase";
-import { GetBookedDatesUseCase } from "../../../usecases/user/GetBookedDatesUseCase";
+import { GetBookingByUserIdUsecase } from "../../../usecases/user/GetBookingByUserIdUsecase";
+
+import { GetBookingIdDetailsUsecase } from "../../../usecases/user/GetBookingIdDetailsUsecase";
+import { CreateReviewUsecase } from "../../../usecases/user/CreateReviewUsecase";
+import { ReviewRepository } from "../../../interface adapter/respository/user/ReviewRepository";
+import { ReviewController } from "../../../interface adapter/controllers/user/ReviewController";
+import { GetReviewByserviceIdUsecase } from "../../../usecases/user/GetReviewByserviceIdUsecase";
+import { GetBookingbyProviderUsecase } from "../../../usecases/user/GetBookingbyProviderUsecase";
+
+const stripeKey = "sk_test_51Q7VPGGWw2JRPJ2CWnRQe4HqZgOx1J2UqVdGqoSiMZq0QmwtS7vwIESa7lFbAaRxanFMV8zM4oBj4EmsVwh101oC00gl3FNpnb";
 
 
 const monoRepository = new UserRepository();
 const mono2Repository = new PostRepository()
 const mono3Repository = new BookingRepository()
+const mono4Repository = new ReviewRepository()
 
 //register
 const UserRegisterUse = new UserRegisterUseCase(monoRepository)
@@ -77,8 +87,8 @@ const UserGetAllPostInShopUse = new UserGetAllPostInShopUseCase(mono2Repository)
 //get singleservice details
 const UserGetSingleServiceUse = new UserGetSingleServiceUseCase(mono2Repository)
 
-//get available dates
-const UserGetAvailableDateUse = new GetServiceAvailabiltyUseCase(mono2Repository)
+// get available dates  && booked dates
+const UserGetAvailableDateUse = new GetServiceAvailabiltyUseCase(mono2Repository,mono3Repository)
 
 export const InjectedPostController = new UserPostController(UserAddPostUse,
     UserGetPostByIdUse,UserDeletePostUse,UserGetPostBypostIdUse,UserEditPostUse,
@@ -88,9 +98,30 @@ export const InjectedPostController = new UserPostController(UserAddPostUse,
 //bookingcreate
 const UserCreateBookingUse = new UserCreateBookingUseCase(mono3Repository)
 
-//getbookeddates
-const UserGetBookedDateUse = new GetBookedDatesUseCase(mono2Repository,mono3Repository)
+//bookingcancel
+const UserCancelBookingUse = new UserCancelBookingUseCase(mono3Repository)
 
-export const InjectedBookingController = new BookingController(UserCreateBookingUse,UserGetBookedDateUse)
+//GetBookdetailsbyUserId
+const GetBookByUserIdUse = new GetBookingByUserIdUsecase(mono3Repository)
+
+//GetBookiByProvider
+const GetBookingByProviderIdUse = new GetBookingbyProviderUsecase(mono3Repository)
+
+//getBookeddetailsByiD
+const GetBookDetailsByIdUse = new GetBookingIdDetailsUsecase(mono3Repository)
+
+export const InjectedBookingController = new BookingController(UserCreateBookingUse,
+    UserCancelBookingUse,GetBookByUserIdUse,GetBookingByProviderIdUse,GetBookDetailsByIdUse)
+
+
+//Reviewcreat
+const CreateReviewUse = new CreateReviewUsecase(mono4Repository)
+
+//GetreviewByservice
+const GetReviewbyserviceUse = new GetReviewByserviceIdUsecase(mono4Repository)
+
+export const InjectedReviewController = new ReviewController(CreateReviewUse,GetReviewbyserviceUse)
+
+
 
 

@@ -1,3 +1,4 @@
+import { AdminAllBookingController } from "../../../interface adapter/controllers/admin/AdminAllBookigsController";
 import { AdminLoginController } from "../../../interface adapter/controllers/admin/AdminLoginController";
 import { GetAllServiceController } from "../../../interface adapter/controllers/admin/GetAllServiceController";
 import { GetAllUserController } from "../../../interface adapter/controllers/admin/GetAllUserController";
@@ -7,8 +8,10 @@ import { AdminLoginUseCase } from "../../../usecases/admin/AdminLoginUseCase";
 import { BlockUserUseCase } from "../../../usecases/admin/BlockUserUseCase.ts";
 import { DeleteServiceCategoryUseCase } from "../../../usecases/admin/DeleteServiceCategoryUseCase";
 import { EditServiceCategoryUseCase } from "../../../usecases/admin/EditServiceCategoryUseCase";
+import { GetAdminBookingByIdUseCase } from "../../../usecases/admin/GetAdminBookingByIdUseCase";
 import { GetAllServiceCategoryUseCase } from "../../../usecases/admin/GetAllServiceCategoryUseCase";
 import { GetAllUserUseCase } from "../../../usecases/admin/GetAllUserUseCase";
+import { GetBookingDetailsUsecase } from "../../../usecases/admin/GetBookingDetailsUsecase";
 import { UnblockUserUseCase } from "../../../usecases/admin/UnBlockUserUseCase";
 
 
@@ -43,3 +46,10 @@ const GetAllServiceCategoryUse =new GetAllServiceCategoryUseCase(AdminMonoReposi
 
 export const InjectedGetAllServiceCategoryController = new GetAllServiceController(AddServiceCategoryUse,EditServiceCategoryUse,DeleteServiceCategoryUse,GetAllServiceCategoryUse,)
 
+//GetAllBookings
+const getAllBookingDetailsUse = new GetBookingDetailsUsecase(AdminMonoRepository)
+
+//GetBookingsById
+const getBookingByIdUse = new GetAdminBookingByIdUseCase(AdminMonoRepository)
+
+export const InjectedGetBookingsUse = new AdminAllBookingController(getAllBookingDetailsUse,getBookingByIdUse)

@@ -2,7 +2,7 @@ import express, { Application, Request, Response, NextFunction } from "express";
 import UserRoute from '../route/user/UserRoute';
 import AdminRoute from '../route/admin/AdminRoute';
 import bodyParser from "body-parser";
-
+import cookieParser from "cookie-parser";
 
 
 export class ExpressServer {
@@ -12,7 +12,7 @@ export class ExpressServer {
 
     constructor() {
         this.app = express();
-     
+        
         this.configureMiddleware();
         this.configureRoutes();
         this.configureErrorHandling();
@@ -22,7 +22,7 @@ export class ExpressServer {
     private configureMiddleware(): void {
         this.app.use(express.json());
         this.app.use(bodyParser.json());
-    
+        this.app.use(cookieParser());
         // Log all incoming requests to the console
         
     }

@@ -9,5 +9,4 @@ export interface IPostRepository{
     deletePost(postId: mongoose.Types.ObjectId): Promise<any>
     getAllServices():Promise<any> 
     getsingleservice(serviceId: mongoose.Types.ObjectId): Promise<ServiceType | null| any>
-    updateAvailability(serviceId: string, availableDates: Date[]):Promise<any>
 }

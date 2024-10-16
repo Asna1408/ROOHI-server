@@ -1,6 +1,6 @@
 import { Router } from 'express'
 export{ Router} from 'express'
-import { InjectedGetAllServiceCategoryController, InjectedAdminLoginController,InjectedGetAllUserController } from '../../injection/admin/AdminInjects';
+import { InjectedGetAllServiceCategoryController, InjectedAdminLoginController,InjectedGetAllUserController, InjectedGetBookingsUse } from '../../injection/admin/AdminInjects';
 
 
 const AdminRoute = Router();
@@ -14,8 +14,8 @@ AdminRoute.get("/service-category/:id", InjectedGetAllServiceCategoryController.
 AdminRoute.post("/AddServiceCategory",InjectedGetAllServiceCategoryController.addServiceCategory.bind(InjectedGetAllServiceCategoryController))
 AdminRoute.put('/EditService-category/:id',InjectedGetAllServiceCategoryController.editServiceCategory.bind(InjectedGetAllServiceCategoryController));
 AdminRoute.delete('/DeleteService-category/:id',InjectedGetAllServiceCategoryController.deleteServiceCategory.bind(InjectedGetAllServiceCategoryController));
-
-
+AdminRoute.get('/bookdetails',InjectedGetBookingsUse.getAllBookingDetails.bind(InjectedGetBookingsUse))
+AdminRoute.get('/Bookdetails/:bookingId',InjectedGetBookingsUse.getBookingById.bind(InjectedGetBookingsUse))
 
 export default AdminRoute ;
 

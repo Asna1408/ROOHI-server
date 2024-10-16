@@ -1,6 +1,6 @@
 import { NextFunction, Router } from 'express'
 export{ Router} from 'express'
-import { InjectedPostController, InjectedGoogleAuthController, InjectedUserForgetPassController, InjectedUserLoginController, InjectedUserRegisterController, InjectedUserResendOtpController, InjectedUserVerifyOtpController, InjectedBookingController } from '../../injection/user/UserInjects';
+import { InjectedPostController, InjectedGoogleAuthController, InjectedUserForgetPassController, InjectedUserLoginController, InjectedUserRegisterController, InjectedUserResendOtpController, InjectedUserVerifyOtpController, InjectedBookingController, InjectedReviewController } from '../../injection/user/UserInjects';
 import { JwtTokenAdapter } from '../../services/JWT/Tokenservice';
 import { Req, Res } from '../../Types/servertype';
 import { ServiceModel } from '../../database/models/user/ServicesModel';
@@ -40,8 +40,14 @@ router.delete('/deletepost/:postId', InjectedPostController.deletePost.bind(Inje
 router.get('/getallpost',InjectedPostController.getAllServices.bind(InjectedPostController))
 router.get('/servicedetails/:id',InjectedPostController.getsingleService.bind((InjectedPostController)))
 router.post('/booknowcheckout',InjectedBookingController.createCheckoutSession.bind(InjectedBookingController))
-
+router.post('/cancel/:bookingId',InjectedBookingController.cancelBooking.bind(InjectedBookingController))
 router.get('/services/:serviceId/availability',InjectedPostController.getAvailability.bind(InjectedPostController))
+router.get('/bookdetails/:userId/bookings',InjectedBookingController.getbookByUserId.bind(InjectedBookingController))
+router.get('/bookdetailsbyid/:bookingId',InjectedBookingController.getBookingDetailsById.bind(InjectedBookingController))
+router.post('/review/addReview',InjectedReviewController.createReview.bind(InjectedReviewController))
+router.get('/service/:serviceId/reviews',InjectedReviewController.getReviewsByService.bind(InjectedReviewController))
+router.get('/bookdetails/bookings/:providerId',InjectedBookingController.getProviderBookingsController.bind(InjectedBookingController))
+
 
 
 export default router ;  
