@@ -10,9 +10,7 @@ export class GetBookingbyProviderUsecase implements GetBookingbyProviderUsecaseI
     constructor(private ibookingrepository: IBookingRepository,
     ) {}
 
-    async getProviderBookings(providerId:string):Promise<BookingType | any>{
-      // Get the service to extract the provider ID
-      
+    async getProviderBookings(providerId:string):Promise<BookingType | any>{      
     
       if (!providerId) {
         throw new Error('Provider ID not found');

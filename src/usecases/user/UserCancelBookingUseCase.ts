@@ -25,10 +25,13 @@ export class UserCancelBookingUseCase implements UserCancelBookingUseCaseInterfa
 
         await this.ibookingrepository.updateBookingStatus(bookingIdString, 'canceled');
 
-        await ServiceModel.updateOne(
+        const updateResult = await ServiceModel.updateOne(
             { _id: booking.service_id },
-            { $push: { availability: booking.booking_date } }
+            { $addToSet: { availability: booking.booking_date } }
         );
+
+        console.log("Service availability update result:", updateResult);
+
 
         // Refund the payment through Stripe
         
