@@ -115,7 +115,7 @@ export const InjectedBookingController = new BookingController(UserCreateBooking
 
 
 //Reviewcreat
-const CreateReviewUse = new CreateReviewUsecase(mono4Repository)
+const CreateReviewUse = new CreateReviewUsecase(mono4Repository,mono3Repository)
 
 //GetreviewByservice
 const GetReviewbyserviceUse = new GetReviewByserviceIdUsecase(mono4Repository)

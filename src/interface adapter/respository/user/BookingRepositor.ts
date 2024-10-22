@@ -49,6 +49,10 @@ export class BookingRepository implements IBookingRepository{
       };
 
 
+//for review and rating
+      async getBookingByUserAndService(userId: string, serviceId: string): Promise<BookingType | any> {
+        return await BookingModel.findOne({ user_id: userId, service_id: serviceId }).select('booking_date').exec();
+    }
 
      
       
