@@ -25,7 +25,7 @@ export class BookingRepository implements IBookingRepository{
     async getBookingdetailsById(bookingId: string): Promise<BookingType | any> {
         try {
           // Assuming your BookingModel has a reference to ServiceModel in 'service_id'
-          return await BookingModel.findById(bookingId).populate('service_id');
+          return await BookingModel.findById(bookingId).populate('service_id').populate('user_id','name email phone');
         } catch (error) {
           throw new Error(`Unable to fetch booking with ID: ${bookingId}. Error: ${error}`);
         }

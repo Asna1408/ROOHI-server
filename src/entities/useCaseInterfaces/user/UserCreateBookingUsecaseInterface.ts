@@ -7,6 +7,7 @@ export interface UserCreateBookingUsecaseInterface {
         userId: mongoose.Types.ObjectId,
         selectedDate: Date,
         paymentStatus: string,
+        sessionId:string,
         paymentIntentId: string
     ): Promise<BookingType>;
 }

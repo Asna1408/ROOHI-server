@@ -1,23 +1,32 @@
 import express, { Application, Request, Response, NextFunction } from "express";
+import { createServer, Server as HTTPServer } from 'http';
 import UserRoute from '../route/user/UserRoute';
 import AdminRoute from '../route/admin/AdminRoute';
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import { initializeSocket } from "../services/WebSocket/socket";
+import { Server as SocketIoServer } from 'socket.io';
 
 
 export class ExpressServer {
     private app: Application;
   
-   
+  
+    private server: HTTPServer;
+    private io: SocketIoServer;
+
 
     constructor() {
         this.app = express();
-        
+        this.server = createServer(this.app);
+        this.io = initializeSocket(this.server);
         this.configureMiddleware();
         this.configureRoutes();
         this.configureErrorHandling();
         this.startServer();
     }
+
+
 
     private configureMiddleware(): void {
         this.app.use(express.json());
@@ -55,7 +64,7 @@ export class ExpressServer {
 
     private startServer(): void {
         const port = process.env.PORT || 7000;  
-        this.app.listen(port, () => {
+        this.server.listen(port, () => {
             console.log(`Express server running on port ${port}`);
         });
     }

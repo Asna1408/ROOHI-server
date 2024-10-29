@@ -33,6 +33,12 @@ import { ReviewRepository } from "../../../interface adapter/respository/user/Re
 import { ReviewController } from "../../../interface adapter/controllers/user/ReviewController";
 import { GetReviewByserviceIdUsecase } from "../../../usecases/user/GetReviewByserviceIdUsecase";
 import { GetBookingbyProviderUsecase } from "../../../usecases/user/GetBookingbyProviderUsecase";
+import { CreateConversationUseCase } from "../../../usecases/user/CreateConversationUsecase";
+import { ChatRepository } from "../../../interface adapter/respository/user/ChatRepository";
+import { ChatController } from "../../../interface adapter/controllers/user/ChatController";
+import { GetConversationByUserIdUseCase } from "../../../usecases/user/GetConversationByUserId";
+import { CreateMessageUsecase } from "../../../usecases/user/CreateMessageUsecase";
+import { GetMessageByIdUseCase } from "../../../usecases/user/GetMessageByIdUsecase";
 
 const stripeKey = "sk_test_51Q7VPGGWw2JRPJ2CWnRQe4HqZgOx1J2UqVdGqoSiMZq0QmwtS7vwIESa7lFbAaRxanFMV8zM4oBj4EmsVwh101oC00gl3FNpnb";
 
@@ -41,6 +47,7 @@ const monoRepository = new UserRepository();
 const mono2Repository = new PostRepository()
 const mono3Repository = new BookingRepository()
 const mono4Repository = new ReviewRepository()
+const mono5Repository = new ChatRepository()
 
 //register
 const UserRegisterUse = new UserRegisterUseCase(monoRepository)
@@ -99,7 +106,7 @@ export const InjectedPostController = new UserPostController(UserAddPostUse,
 const UserCreateBookingUse = new UserCreateBookingUseCase(mono3Repository)
 
 //bookingcancel
-const UserCancelBookingUse = new UserCancelBookingUseCase(mono3Repository)
+const UserCancelBookingUse = new UserCancelBookingUseCase(mono3Repository,stripeKey)
 
 //GetBookdetailsbyUserId
 const GetBookByUserIdUse = new GetBookingByUserIdUsecase(mono3Repository)
@@ -121,6 +128,21 @@ const CreateReviewUse = new CreateReviewUsecase(mono4Repository,mono3Repository)
 const GetReviewbyserviceUse = new GetReviewByserviceIdUsecase(mono4Repository)
 
 export const InjectedReviewController = new ReviewController(CreateReviewUse,GetReviewbyserviceUse)
+
+
+//createConversation
+const CreateConversationUse = new CreateConversationUseCase(mono5Repository)
+
+//getconversationByid
+const GetConversationByIdUse = new GetConversationByUserIdUseCase(mono5Repository)
+
+//createmessage
+const CreateMessageUse = new CreateMessageUsecase(mono5Repository)
+
+//GetmessageByConId
+const GetMessageByIdUse = new GetMessageByIdUseCase(mono5Repository)
+
+export const InjectedChatController = new ChatController(CreateConversationUse,GetConversationByIdUse,CreateMessageUse,GetMessageByIdUse)
 
 
 

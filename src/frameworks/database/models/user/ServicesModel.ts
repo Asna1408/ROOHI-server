@@ -30,6 +30,7 @@ const ServiceSchema = new mongoose.Schema({
     },
     availability: {
       type: [Date],
+      default:[],
       required: true,
     },
     images: {

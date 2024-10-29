@@ -22,24 +22,19 @@ export class CreateReviewUsecase implements CreateReviewUsecaseInterface{
           throw new Error("Invalid userId or serviceId provided");
       }
 
-      // Retrieve booking by userId and serviceId
       const booking = await this.ibookingrepository.getBookingByUserAndService(userId, serviceId);
       if (!booking) {
           throw new Error("No booking found for this user and service");
       }
 
-      // Check if the booking date has passed
       const currentDate = new Date();
-      const bookingDate = new Date(booking.booking_date);  // Convert the booking date to a Date object
-      console.log(bookingDate,"booking dateeeeeeeeeeeeeeeeeee")
+      const bookingDate = new Date(booking.booking_date);  
 
       if (currentDate < bookingDate) {
         console.log("review can only be submitted after service done")
           throw new Error("Cannot leave a review after the booking date");
         
       }
-
-
         return this.ireviewrepository.createReview(userId, serviceId,rating, review);
       }
     

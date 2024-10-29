@@ -8,7 +8,7 @@ export class AdminAllBookingController {
         private igetadminbookingbyidusecaseInterface: GetAdminBookingByIdUseCaseInterface
     ){}
   
-    async getAllBookingDetails(req: Req, res: Res) {
+    async getAllBookingDetails(req: Req, res: Res){
       try {
         const bookings = await this.iadminbookinddetailUsecase.getAllBookingDetails();
         res.status(200).json(bookings); 
@@ -21,8 +21,6 @@ export class AdminAllBookingController {
 
     async getBookingById(req: Req, res: Res):Promise<void> {
         const  {bookingId } = req.params;
-      
-    
         try {
           const booking = await this.igetadminbookingbyidusecaseInterface.GetBookingById(bookingId);
           res.status(200).json(booking);

@@ -7,12 +7,12 @@ import bcrypt from "bcrypt"
 
 export class GoogleAuthUseCase implements IGoogleAuth{
     constructor(private UserRepository: IUserRepository){}
-    async GoogleAuthLogin(user: UserType): Promise<string | UserType | null | undefined> {
-      const existingUser = await this.UserRepository.FindByEmail(user.email);
+    async GoogleAuthLogin(user: UserType): Promise<string | UserType | null | undefined | any> {
+      const existingUser: any = await this.UserRepository.FindByEmail(user.email);
 
       if (existingUser) {
         return {
-          ...existingUser,
+                existingUser ,
           alreadyRegistered: true,
         };
       } else {

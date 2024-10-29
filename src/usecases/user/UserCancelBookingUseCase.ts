@@ -8,10 +8,13 @@ import { ServiceModel } from "../../frameworks/database/models/user/ServicesMode
 
 export class UserCancelBookingUseCase implements UserCancelBookingUseCaseInterface {
 
-
+    private stripe: Stripe;
     constructor(private ibookingrepository: IBookingRepository,
+        private stripeSecretKey:string,
       
-    ) {}
+    ) {
+        this.stripe = new Stripe(this.stripeSecretKey,);
+    }
 
     async cancelBooking(bookingId: string | mongoose.Types.ObjectId): Promise<void> {
         
@@ -32,8 +35,28 @@ export class UserCancelBookingUseCase implements UserCancelBookingUseCaseInterfa
 
         console.log("Service availability update result:", updateResult);
 
+        if (updateResult.modifiedCount > 0) {
+            console.log("Canceled date re-added to availability successfully.");
+        } else {
+            console.warn("Canceled date was already available.");
+        }
 
         // Refund the payment through Stripe
+        if (booking.paymentIntentId) {
+            try {
+                // Refund the payment via Stripe    
+                const refund = await this.stripe.refunds.create({
+                    payment_intent: booking.paymentIntentId
+                });
+
+                console.log("Refund successful:", refund.id);
+            } catch (err) {
+                console.error("Refund error:", err);
+                throw new Error("Failed to process refund. Please try again later.");
+            }
+        }else {
+            console.warn("No paymentIntentId found, skipping refund.");
+        }
         
     }
 

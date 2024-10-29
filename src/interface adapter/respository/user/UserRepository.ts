@@ -1,3 +1,4 @@
+import { Model } from "mongoose";
 import { UserType } from "../../../entities/types/user/UserType";
 import { UserModel } from "../../../frameworks/database/models/user/userModel";
 import { IUserRepository } from "./IUserRepository";
@@ -5,6 +6,26 @@ import { IUserRepository } from "./IUserRepository";
 
 export class UserRepository implements IUserRepository{ 
 
+  async getPaginatedData<T extends Document>(
+    model: Model<T>,
+    page: number,
+    limit: number,
+    populateFields: string[] = []
+  ): Promise<{ totalRecords: number; records: T[] }> {
+    const skip = (page - 1) * limit;
+    const totalRecords = await model.countDocuments();
+    const records = await model
+      .find()
+      .skip(skip)
+      .limit(limit)
+      .populate(populateFields)
+      .exec();
+
+    return {
+      totalRecords,
+      records,
+    };
+  }
     async RegisterUser(user: UserType): Promise<any> {
         return await UserModel.create(user);
     }
@@ -14,9 +35,7 @@ export class UserRepository implements IUserRepository{
     }
 
     async GoogleOAuth(user: UserType): Promise<any> {
-        const newUser = await UserModel.create(user);
-        newUser.save();
-    
+        const newUser = await UserModel.create(user);   
         return newUser;
       }
 

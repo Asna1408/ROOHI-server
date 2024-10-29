@@ -4,12 +4,12 @@ const BookingSchema = new mongoose.Schema({
     service_id: {
         type: mongoose.Types.ObjectId,
         required: true,
-        ref: 'Service', // Reference to the Service model
+        ref: 'Service', 
     },
     user_id: {
         type: mongoose.Types.ObjectId,
         required: true,
-        ref: 'User', // Reference to the User model
+        ref: 'User',
     },
     provider_id:{
         type:mongoose.Types.ObjectId,
@@ -19,9 +19,13 @@ const BookingSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
+    sessionId:{
+       type:String,
+       required:false,
+    },
     paymentIntentId: {
-        type: String, // ID from the payment processor (e.g., Stripe)
-        required: false, // Not required at creation, can be added later
+        type: String, 
+        required: false, 
     },
     status: {
         type: String,

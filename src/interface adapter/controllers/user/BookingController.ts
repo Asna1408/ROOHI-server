@@ -19,53 +19,121 @@ export class BookingController {
     ){}
 
     // Controller to create a checkout session
-    async createCheckoutSession(req: Req, res: Res) {
-        const { serviceId, userId, selectedDate, amount, currency } = req.body;
+    // async createCheckoutSession(req: Req, res: Res) {
+    //     const { serviceId, userId, selectedDate, amount, currency } = req.body;
 
-        try {
+    //     try {
             
-            const session = await stripe.checkout.sessions.create({
-                payment_method_types: ['card'], 
-                line_items: [
-                    {
-                        price_data: {
-                            currency: currency,
-                            product_data: {
-                                name: `Booking for service ID: ${serviceId}`, 
-                            },
-                            unit_amount: amount, // Amount in cents
-                        },
-                        quantity: 1,
-                    },
-                ],
-                mode: 'payment',
-                success_url: `${req.headers.origin}/booking/success?session_id={CHECKOUT_SESSION_ID}`, // Redirect after payment success
-                cancel_url: `${req.headers.origin}/booking/cancel`, 
-            });
+    //         const session = await stripe.checkout.sessions.create({
+    //             payment_method_types: ['card'], 
+    //             line_items: [
+    //                 {
+    //                     price_data: {
+    //                         currency: currency,
+    //                         product_data: {
+    //                             name: `Booking for service ID: ${serviceId}`, 
+    //                         },
+    //                         unit_amount: amount, // Amount in cents
+    //                     },
+    //                     quantity: 1,
+    //                 },
+    //             ],
+    //             mode: 'payment',
+    //             success_url: `${req.headers.origin}/booking/success?session_id={CHECKOUT_SESSION_ID}`, // Redirect after payment success
+    //             cancel_url: `${req.headers.origin}/booking/cancel`, 
+    //         });
 
            
+    //         const booking = await this.icreatebookingUsecaseinterface.CreateBook(
+    //             serviceId,
+    //             userId,
+    //             new Date(selectedDate), 
+    //             'pending', 
+    //             session.id 
+    //         );
+
+    //         res.status(201).json({ success: true, sessionId: session.id });
+    //     } catch (error) {
+    //         const err = error as Error; 
+    //         console.error('Payment error:', err.message); 
+    //         res.status(500).json({ error: err.message });
+    //     }
+    // }
+
+    async createCheckoutSession(req: Req, res: Res) {
+      const { serviceId, userId, selectedDate, amount, currency } = req.body;
+
+      try {
+          const session = await stripe.checkout.sessions.create({
+              payment_method_types: ['card'], 
+              line_items: [
+                  {
+                      price_data: {
+                          currency: currency,
+                          product_data: {
+                              name: `Booking for service ID: ${serviceId}`, 
+                          },
+                          unit_amount: amount, // Amount in cents
+                      },
+                      quantity: 1,
+                  },
+              ],
+              mode: 'payment',
+              success_url: `${req.headers.origin}/booking/success?session_id={CHECKOUT_SESSION_ID}&service_id=${serviceId}&user_id=${userId}&selected_date=${selectedDate}`, // Redirect after payment success
+              cancel_url: `${req.headers.origin}/booking/cancel`, 
+          });
+
+          res.status(201).json({ success: true, sessionId: session.id });
+      } catch (error) {
+          const err = error as Error; 
+          console.error('Payment error:', err.message); 
+          res.status(500).json({ error: err.message });
+      }
+  }
+
+
+  async verifyPaymentAndCreateBooking(req: Req, res: Res) {
+    const sessionId = req.query.session_id as string;
+    const serviceId = req.query.service_id as string;
+    const userId = req.query.user_id as string;
+    const selectedDate = req.query.selected_date as string;
+
+    if (!sessionId || !serviceId || !userId || !selectedDate) {
+        console.error("Session ID or parameters are missing");
+        return res.status(400).json({ error: "Session ID and parameters are required" });
+    }
+
+    try {
+        // Retrieve the session from Stripe
+        const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+        // Ensure the session is paid and has a payment intent ID
+        if (session.payment_status === "paid" && session.payment_intent) {
+
             const booking = await this.icreatebookingUsecaseinterface.CreateBook(
-                serviceId,
-                userId,
-                new Date(selectedDate), 
-                'pending', 
-                session.id 
+                new mongoose.Types.ObjectId(serviceId),
+                new mongoose.Types.ObjectId(userId),
+                new Date(selectedDate),
+                "confirmed",
+                sessionId,
+                session.payment_intent.toString()
             );
 
-            res.status(201).json({ success: true, sessionId: session.id });
-        } catch (error) {
-            const err = error as Error; 
-            console.error('Payment error:', err.message); 
-            res.status(500).json({ error: err.message });
+            res.status(201).json({ success: true, booking });
+        } else {
+            throw new Error("Payment was not successful");
         }
+    } catch (error) {
+        console.error("Verification error:", error);
+        res.status(500).json({ error: "Verification failed" });
     }
+}
 
 
     async cancelBooking(req: Req, res: Res) {
         const { bookingId } = req.params;
 
         try {
-            
             const bookingObjectId = new mongoose.Types.ObjectId(bookingId);
 
             await this.icancelBookingUsecaseInterface.cancelBooking(bookingObjectId);
@@ -105,9 +173,6 @@ async getbookByUserId(req:Req,res:Res){
     }
 
 
-    
-
-
       async getBookingDetailsById(req: Req, res: Res): Promise<void> {
         try {
           const bookingId = req.params.bookingId;
@@ -121,6 +186,7 @@ async getbookByUserId(req:Req,res:Res){
 
 
       async getProviderBookingsController(req:Req, res:Res) {
+        
            const { providerId } = req.params;
         
         try {

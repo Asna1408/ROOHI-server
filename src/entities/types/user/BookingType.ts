@@ -6,6 +6,7 @@ export type BookingType = {
     user_id: mongoose.Types.ObjectId; 
     provider_id?:mongoose.Types.ObjectId | null;    
     booking_date: Date;  
+    sessionId?:string;
     paymentIntentId?: string;
     status: 'confirmed' | 'pending' | 'canceled'; 
     created_at?: Date;                     

@@ -16,7 +16,7 @@ export class GetBookingIdDetailsUsecase implements GetBookingIdDetailsUsecaseInt
       }
   
       const booking = await this.bookingRepository.getBookingdetailsById(BookingId);
-  
+  console.log(booking,"booking details")
       if (!booking) {
         throw new Error('Booking not found');
       }
