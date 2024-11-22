@@ -9,6 +9,12 @@ import { ServiceCategoryModel } from "../../../frameworks/database/models/admin/
 import BookingModel from "../../../frameworks/database/models/user/BookingModel";
 import { UserModel } from "../../../frameworks/database/models/user/userModel";
 import { IAdminRepository } from "./IAdminRepsitory";
+import { BannerModel } from "../../../frameworks/database/models/admin/BannerModel";
+import { BannerType } from "../../../entities/types/admin/BannerType";
+import Stripe from "stripe";
+import { Payout } from "../../../frameworks/database/models/admin/PayoutModel";
+import { PayoutType } from "../../../entities/types/admin/PayoutType";
+const stripe = new Stripe('sk_test_51Q7VPGGWw2JRPJ2CWnRQe4HqZgOx1J2UqVdGqoSiMZq0QmwtS7vwIESa7lFbAaRxanFMV8zM4oBj4EmsVwh101oC00gl3FNpnb');
 
 
 export class AdminRepository implements IAdminRepository{
@@ -99,6 +105,158 @@ export class AdminRepository implements IAdminRepository{
             throw new Error('Failed to fetch booking');
           }
         }
+
+
+        async getUserCount():Promise<UserType | any> {
+          return await UserModel.countDocuments();
+        };
+
+        
+
+        async getBookingCount():Promise<BookingType | any> {
+          return await BookingModel.countDocuments();
+        };
+
+        
+
+
+        async calculateTotalRevenue() :Promise<BookingType> {
+          const revenue = await BookingModel.aggregate([
+            // { $match: { status: 'completed' } },
+            { $group: { _id: null, total: { $sum: '$amount' } } },
+          ]);
+          return revenue[0]?.total || 0;
+        };
+
+       
+
+        async getRevenueOverTime(filter: string): Promise<BookingType | any> {
+          let groupByStage: any = {};
+          let projectTimePeriod: any = {};
+        
+          switch (filter) {
+            case "week":
+              groupByStage = {
+                _id: { $week: "$created_at" }, // Group by week
+                totalRevenue: { $sum: "$amount" },
+              };
+              projectTimePeriod = { timePeriod: "$_id", totalRevenue: 1 };
+              break;
+        
+            case "month":
+              groupByStage = {
+                _id: { $month: "$created_at" }, // Group by month
+                totalRevenue: { $sum: "$amount" },
+              };
+              projectTimePeriod = {
+                timePeriod: {
+                  $switch: {
+                    branches: [
+                      { case: { $eq: ["$_id", 1] }, then: "Jan" },
+                      { case: { $eq: ["$_id", 2] }, then: "Feb" },
+                      { case: { $eq: ["$_id", 3] }, then: "Mar" },
+                      { case: { $eq: ["$_id", 4] }, then: "Apr" },
+                      { case: { $eq: ["$_id", 5] }, then: "May" },
+                      { case: { $eq: ["$_id", 6] }, then: "Jun" },
+                      { case: { $eq: ["$_id", 7] }, then: "Jul" },
+                      { case: { $eq: ["$_id", 8] }, then: "Aug" },
+                      { case: { $eq: ["$_id", 9] }, then: "Sep" },
+                      { case: { $eq: ["$_id", 10] }, then: "Oct" },
+                      { case: { $eq: ["$_id", 11] }, then: "Nov" },
+                      { case: { $eq: ["$_id", 12] }, then: "Dec" },
+                    ],
+                    default: "Unknown",
+                  },
+                },
+                totalRevenue: 1,
+              };
+              break;
+        
+            case "year":
+              groupByStage = {
+                _id: { $year: "$created_at" }, // Group by year
+                totalRevenue: { $sum: "$amount" },
+              };
+              projectTimePeriod = { timePeriod: "$_id", totalRevenue: 1 };
+              break;
+        
+            default:
+              throw new Error("Invalid filter type. Use 'week', 'month', or 'year'.");
+          }
+        
+          return await BookingModel.aggregate([
+            { $match: { created_at: { $ne: null } } }, // Ensure created_at exists
+            { $group: groupByStage },
+            { $project: projectTimePeriod },
+            { $sort: { "_id": 1 } }, // Sort by time period
+          ]);
+        }
+        
+
+
+        async getBookingStatusDistribution():Promise<BookingType | any> {
+          return await BookingModel.aggregate([
+            { $group: { _id: '$status', count: { $sum: 1 } } },
+          ]);
+        };
+        
+
+        async createBanner(data:BannerType): Promise<BannerType | any> {
+          return await BannerModel.create(data);
+        }
+      
+        async getBanners(): Promise<BannerType[]> {
+          return await BannerModel.find();
+        }
+
+        async getBannerById(BannerId:string) : Promise <BannerType | any> {
+          return await BannerModel.findById(BannerId)
+        }
+
+      
+        async updateBanner(BannerId: string, data: BannerType): Promise<BannerType | null> {
+          return await BannerModel.findByIdAndUpdate(BannerId, data, { new: true });
+        }
+      
+        async deleteBanner(BannerId: string): Promise<BannerType | null> {
+          return await BannerModel.findByIdAndDelete(BannerId);
+        }
+
+
+        async createPayout(providerId: string, amount: number): Promise<string> {
+          const providerStripeAccount = await this.getProviderStripeAccount(providerId);
+          if (!providerStripeAccount) {
+              throw new Error("Provider does not have a Stripe account.");
+          }
+
+          const account = await stripe.accounts.retrieve(providerStripeAccount);
+        if (account.capabilities?.transfers !== 'active') {
+            // If 'transfers' capability is not active, request it
+            const updatedAccount = await stripe.accounts.update(providerStripeAccount, {
+                capabilities: {
+                    transfers: { requested: true },
+                },
+            });
+            console.log(`Transfer capability requested for account ${providerStripeAccount}`);
+            console.log(updatedAccount,"update transfer acocunt")
+        }
+  
+          const payout = await stripe.transfers.create({
+              amount: amount * 100, // convert to cents
+              currency: 'usd',
+              destination: providerStripeAccount,
+              transfer_group: `provider_${providerId}`,
+          });
+  
+          return payout.id;
+      }
+  
+      async getProviderStripeAccount(providerId: string): Promise<string | null> {
+        const objectId =  new mongoose.Types.ObjectId(providerId);
+
+        const provider = await UserModel.findById(objectId);
+          return provider?.stripeAccountId || null;
+      }
 
 
       }

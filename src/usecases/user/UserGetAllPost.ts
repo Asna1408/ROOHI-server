@@ -8,6 +8,10 @@ export class UserGetAllPostUseCase implements UserGetAllPostUseCaseInterface{
 
 async GetAllPost(providerId: mongoose.Types.ObjectId):Promise<any> {
     try {
+      if (!providerId) {
+        throw new Error("Provider ID is required");
+    }
+
       return await this.ipostrepository.getServicesByProvider(providerId);
     } catch (error) {
       throw new Error("Error getting services for user");

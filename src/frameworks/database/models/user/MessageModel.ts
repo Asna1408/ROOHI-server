@@ -11,7 +11,7 @@ const MessageSchema = new mongoose.Schema(
             ref: "User"
         },
         text:{type:String},
-    },
+     },
     { timestamps: true }
 )
 export default mongoose.model("Message", MessageSchema);

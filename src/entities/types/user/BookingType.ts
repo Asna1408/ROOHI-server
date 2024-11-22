@@ -8,7 +8,8 @@ export type BookingType = {
     booking_date: Date;  
     sessionId?:string;
     paymentIntentId?: string;
-    status: 'confirmed' | 'pending' | 'canceled'; 
+    amount:number;
+    status: 'confirmed' | 'pending' | 'canceled' | 'completed'; 
     created_at?: Date;                     
     updated_at?: Date;                   
 };

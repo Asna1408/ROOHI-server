@@ -7,6 +7,7 @@ import { GetBookingByUserIdUsecaseInterface } from "../../../entities/useCaseInt
 import { GetBookingbyProviderUsecaseInterface } from "../../../entities/useCaseInterfaces/user/GetBookingbyProviderUsecaseInterface";
 import { GetBookingIdDetailsUsecase } from "../../../usecases/user/GetBookingIdDetailsUsecase";
 import { GetBookingIdDetailsUsecaseInterface } from "../../../entities/useCaseInterfaces/user/GetBookingIdDetailsUsecaseInterface";
+import { FetchingReviewDateUsecaseInterface } from "../../../entities/useCaseInterfaces/user/FetchingReviewDateUsecaseInterface";
 const stripe = new Stripe('sk_test_51Q7VPGGWw2JRPJ2CWnRQe4HqZgOx1J2UqVdGqoSiMZq0QmwtS7vwIESa7lFbAaRxanFMV8zM4oBj4EmsVwh101oC00gl3FNpnb');
   
 
@@ -15,7 +16,8 @@ export class BookingController {
             private icancelBookingUsecaseInterface:UserCancelBookingUseCaseInterface,
             private igetBookingUsecaseInterface:GetBookingByUserIdUsecaseInterface,
            private igetbookingbyproviderIdUsecaseInterface: GetBookingbyProviderUsecaseInterface,
-            private igetbookDetailsbyIdusecaseInterface:GetBookingIdDetailsUsecaseInterface
+            private igetbookDetailsbyIdusecaseInterface:GetBookingIdDetailsUsecaseInterface,
+            private ifetchReviewdateUsecaseinterface : FetchingReviewDateUsecaseInterface
     ){}
 
     // Controller to create a checkout session
@@ -109,6 +111,7 @@ export class BookingController {
 
         // Ensure the session is paid and has a payment intent ID
         if (session.payment_status === "paid" && session.payment_intent) {
+          const amount = session.amount_total ? session.amount_total / 100 : 0; // Amount in currency units
 
             const booking = await this.icreatebookingUsecaseinterface.CreateBook(
                 new mongoose.Types.ObjectId(serviceId),
@@ -116,7 +119,8 @@ export class BookingController {
                 new Date(selectedDate),
                 "confirmed",
                 sessionId,
-                session.payment_intent.toString()
+                session.payment_intent.toString(),
+                 amount
             );
 
             res.status(201).json({ success: true, booking });
@@ -144,6 +148,28 @@ export class BookingController {
             res.status(500).json({ error: err.message });
         }
     }
+
+    async completeBooking(req: Req, res: Res) {
+      const { bookingId } = req.params;
+    
+      try {
+          // Convert bookingId to ObjectId and validate it
+          const bookingObjectId = new mongoose.Types.ObjectId(bookingId);
+
+          await this.icancelBookingUsecaseInterface.markBookingAsCompleted(bookingObjectId);
+  
+          res.status(200).json({
+              message: 'Booking has been successfully marked as completed',
+          });
+      } catch (error) {
+          console.error('Error completing booking:', error);
+          res.status(500).json({
+              message: 'Error completing booking',
+              error: error // Add the error message to the response
+          });
+      }
+  }
+  
 
 async getbookByUserId(req:Req,res:Res){
         const { userId } = req.params;
@@ -186,25 +212,36 @@ async getbookByUserId(req:Req,res:Res){
 
 
       async getProviderBookingsController(req:Req, res:Res) {
-        
            const { providerId } = req.params;
-        
+
         try {
           if (!providerId) {
             return res.status(400).json({ error: "User ID is required" });
           }
-
           const isValidObjectId = mongoose.Types.ObjectId.isValid(providerId);
     if (!isValidObjectId) {
       return res.status(400).json({ error: "Invalid Provider ID format" });
     }
       
     const bookings = await this.igetbookingbyproviderIdUsecaseInterface.getProviderBookings(providerId);
-      
           return res.status(200).json(bookings);
         } catch (error) {
           return res.status(500).json({ message: error});
         }
       };
+
+    
+      async getBookingStatus(req:Req, res:Res) {
+        const { userId, serviceId } = req.params;
+    
+        try {
+          const bookingStatus = await this.ifetchReviewdateUsecaseinterface.FetchBookingStatus(userId, serviceId);
+          res.status(200).json({ bookingStatus});
+        } catch (error) {
+          res.status(404).json({ message: error});
+        }
+      }
+
+
 }
 

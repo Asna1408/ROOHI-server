@@ -18,7 +18,8 @@ export class UserPostController {
         private usereditpostusecaseinterface:UserEditPostUsecaseInterface,
         private userfetchallpostusecaseinterface:UserGetAllPostInShopUseCaseInterface,
         private usergetsingleserviceinterface:UserGetSingleServiceUseCaseInterface,
-      private getserviceavailabilityusecaseInterfcae:GetServiceAvailabiltyUsecaseInterface) {}
+      private getserviceavailabilityusecaseInterfcae:GetServiceAvailabiltyUsecaseInterface,
+    ) {}
 
     async createService(req: Req, res: Res): Promise<any> {
         try {

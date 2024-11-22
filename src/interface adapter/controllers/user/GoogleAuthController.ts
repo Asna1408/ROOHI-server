@@ -8,7 +8,6 @@ export class GoogleOAthController {
     try {
       const data= await this.googleauthusecase.GoogleAuthLogin(req.body);
       console.log(data)
-      console.log("👍👍👍👍👍👍👍❤️dataaaaaaaaaaaaaaaaaa");
 
       if (data) {
         const token: string = req.body.token;// Assuming token is part of the response

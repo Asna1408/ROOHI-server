@@ -10,6 +10,8 @@ export type UserType = {
  resetToken?: string;
  resetTokenExpiration?: Date;
  verified?: boolean;
+ stripeAccountId?:String;
+ stripePayoutBalance?: Number,
  createdAt?: number;
  updatedAt?: number;
 

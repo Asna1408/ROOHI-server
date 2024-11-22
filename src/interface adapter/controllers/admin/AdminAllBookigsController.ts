@@ -1,12 +1,14 @@
 import { GetAdminBookingByIdUseCaseInterface } from "../../../entities/useCaseInterfaces/admin/GetAdminBookingByIdUseCaseInterface";
+import { GetBookingCountUsecaseInterface } from "../../../entities/useCaseInterfaces/admin/GetBookingCountUsecaseInterface";
 import { GetBookingDetailsUsecaseInterface } from "../../../entities/useCaseInterfaces/admin/GetBookingDetailsUsecaseInterface";
 import { Req, Res } from "../../../frameworks/Types/servertype";
 
 
 export class AdminAllBookingController {
     constructor(private iadminbookinddetailUsecase: GetBookingDetailsUsecaseInterface,
-        private igetadminbookingbyidusecaseInterface: GetAdminBookingByIdUseCaseInterface
-    ){}
+        private igetadminbookingbyidusecaseInterface: GetAdminBookingByIdUseCaseInterface,
+        private igetbookingcountusecase : GetBookingCountUsecaseInterface
+      ){}
   
     async getAllBookingDetails(req: Req, res: Res){
       try {
@@ -14,7 +16,7 @@ export class AdminAllBookingController {
         res.status(200).json(bookings); 
       } catch (error) {
         console.error('Error fetching booking details:', error);
-        res.status(500).json({ message: 'Failed to fetch booking details' });
+        res.status(500).json({ message: 'Failed to fetch booking details' }); 
       }
     }
 
@@ -29,4 +31,14 @@ export class AdminAllBookingController {
           res.status(500).json({ message: 'Failed to fetch booking details' });
         }
       }
+
+      async getBookingCount (req:Req, res:Res) {
+        try {
+          const count = await this.igetbookingcountusecase.getBookingCount();
+          res.status(200).json({ count });
+        } catch (error) {
+          console.error("Error fetching booking count:", error);
+          res.status(500).json({ message: 'Error fetching booking count' });
+        }
+      };
   }

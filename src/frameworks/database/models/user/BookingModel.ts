@@ -19,6 +19,10 @@ const BookingSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
+    amount:{
+        type:Number,
+        required:false,
+    },
     sessionId:{
        type:String,
        required:false,
@@ -29,7 +33,7 @@ const BookingSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['confirmed', 'pending', 'canceled'],
+        enum: ['confirmed', 'pending', 'canceled','completed'],
         default: 'pending',
     },
     created_at: {

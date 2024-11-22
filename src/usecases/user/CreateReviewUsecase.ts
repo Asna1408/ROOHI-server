@@ -27,14 +27,14 @@ export class CreateReviewUsecase implements CreateReviewUsecaseInterface{
           throw new Error("No booking found for this user and service");
       }
 
-      const currentDate = new Date();
-      const bookingDate = new Date(booking.booking_date);  
+      // const currentDate = new Date();
+      // const bookingDate = new Date(booking.booking_date);  
 
-      if (currentDate < bookingDate) {
-        console.log("review can only be submitted after service done")
-          throw new Error("Cannot leave a review after the booking date");
+      // if (currentDate < bookingDate) {
+      //   console.log("review can only be submitted after service done")
+      //     throw new Error("Cannot leave a review after the booking date");
         
-      }
+      // }
         return this.ireviewrepository.createReview(userId, serviceId,rating, review);
       }
     

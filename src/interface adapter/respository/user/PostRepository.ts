@@ -17,7 +17,7 @@ export class PostRepository implements IPostRepository{
     async getServicesByProvider(providerId: mongoose.Types.ObjectId): Promise<any> {
         try {
           // Assuming you have a Service model with the provider_id reference
-          const services = await ServiceModel.find({ provider_id: providerId }).populate("service_type");
+          const services = await ServiceModel.find({ provider_id: providerId }).populate("service_type").populate("provider_id","name email phone location");
           return services;
         } catch (error) {
           throw new Error("Error fetching services");
@@ -54,7 +54,7 @@ export class PostRepository implements IPostRepository{
     //get single service 
     async getsingleservice(serviceId: mongoose.Types.ObjectId): Promise<ServiceType | null| any> {
       try {
-          const service = await ServiceModel.findById(serviceId).exec();
+          const service = await ServiceModel.findById(serviceId).populate("provider_id","name").exec();
           return service;
       } catch (error) {
           throw new Error(`Error fetching service: ${error}`);

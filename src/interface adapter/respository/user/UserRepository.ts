@@ -2,6 +2,8 @@ import { Model } from "mongoose";
 import { UserType } from "../../../entities/types/user/UserType";
 import { UserModel } from "../../../frameworks/database/models/user/userModel";
 import { IUserRepository } from "./IUserRepository";
+import { BannerModel } from "../../../frameworks/database/models/admin/BannerModel";
+import { BannerType } from "../../../entities/types/admin/BannerType";
 
 
 export class UserRepository implements IUserRepository{ 
@@ -107,6 +109,8 @@ export class UserRepository implements IUserRepository{
     }
     
 
-    
+    async getActiveBanners():Promise<BannerType | any> {
+      return await BannerModel.find({ isActive: true }); // Fetch only active banners
+    }
 
 }

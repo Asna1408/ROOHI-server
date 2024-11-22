@@ -39,6 +39,8 @@ import { ChatController } from "../../../interface adapter/controllers/user/Chat
 import { GetConversationByUserIdUseCase } from "../../../usecases/user/GetConversationByUserId";
 import { CreateMessageUsecase } from "../../../usecases/user/CreateMessageUsecase";
 import { GetMessageByIdUseCase } from "../../../usecases/user/GetMessageByIdUsecase";
+import { FetchingReviewDateUsecase } from "../../../usecases/user/FetchingReviewDateUsecase";
+import { GetBannerInUserUsecase } from "../../../usecases/user/GetBannerInUserUsecase";
 
 const stripeKey = "sk_test_51Q7VPGGWw2JRPJ2CWnRQe4HqZgOx1J2UqVdGqoSiMZq0QmwtS7vwIESa7lFbAaRxanFMV8zM4oBj4EmsVwh101oC00gl3FNpnb";
 
@@ -55,7 +57,11 @@ export const InjectedUserRegisterController = new UserRegisterController(UserReg
 
 //login
 const UserLoginUse = new UserLoginUseCase(monoRepository);
-export const InjectedUserLoginController = new UserLoginController(UserLoginUse);
+
+//userbannerin home
+const GetBannerInUserUse = new GetBannerInUserUsecase(monoRepository)
+
+export const InjectedUserLoginController = new UserLoginController(UserLoginUse,GetBannerInUserUse);
 
 //googleauth
 const GoogleAuthUse = new GoogleAuthUseCase(monoRepository);
@@ -117,8 +123,11 @@ const GetBookingByProviderIdUse = new GetBookingbyProviderUsecase(mono3Repositor
 //getBookeddetailsByiD
 const GetBookDetailsByIdUse = new GetBookingIdDetailsUsecase(mono3Repository)
 
+//getBookingDate
+const GetBookingDateUse = new FetchingReviewDateUsecase(mono3Repository)
+
 export const InjectedBookingController = new BookingController(UserCreateBookingUse,
-    UserCancelBookingUse,GetBookByUserIdUse,GetBookingByProviderIdUse,GetBookDetailsByIdUse)
+    UserCancelBookingUse,GetBookByUserIdUse,GetBookingByProviderIdUse,GetBookDetailsByIdUse,GetBookingDateUse)
 
 
 //Reviewcreat

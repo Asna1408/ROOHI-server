@@ -5,13 +5,18 @@ import { UserCancelBookingUseCaseInterface } from "../../entities/useCaseInterfa
 import { IPostRepository } from "../../interface adapter/respository/user/IPostRepository";
 import Stripe from "stripe";
 import { ServiceModel } from "../../frameworks/database/models/user/ServicesModel";
+import { differenceInHours } from 'date-fns';
+
 
 export class UserCancelBookingUseCase implements UserCancelBookingUseCaseInterface {
 
     private stripe: Stripe;
+    private readonly REFUND_TIME_LIMIT_HOURS = 48; // User cancellation time limit for full refund
+    private readonly PARTIAL_REFUND_PERCENTAGE = 0.5; // 50% refund if canceled late
+      
+      
     constructor(private ibookingrepository: IBookingRepository,
         private stripeSecretKey:string,
-      
     ) {
         this.stripe = new Stripe(this.stripeSecretKey,);
     }
@@ -41,12 +46,18 @@ export class UserCancelBookingUseCase implements UserCancelBookingUseCaseInterfa
             console.warn("Canceled date was already available.");
         }
 
+        const hoursUntilBooking = differenceInHours(new Date(booking.booking_date), new Date());
+        const refundAmount = hoursUntilBooking >= this.REFUND_TIME_LIMIT_HOURS
+            ? booking.amount // Full refund
+            : booking.amount * this.PARTIAL_REFUND_PERCENTAGE; // 50% refund
+
         // Refund the payment through Stripe
-        if (booking.paymentIntentId) {
+        if (booking.paymentIntentId  ) {
             try {
                 // Refund the payment via Stripe    
                 const refund = await this.stripe.refunds.create({
-                    payment_intent: booking.paymentIntentId
+                    payment_intent: booking.paymentIntentId,
+                    amount: Math.round(refundAmount * 100),
                 });
 
                 console.log("Refund successful:", refund.id);
@@ -60,4 +71,24 @@ export class UserCancelBookingUseCase implements UserCancelBookingUseCaseInterfa
         
     }
 
+    async markBookingAsCompleted(bookingId: string | mongoose.Types.ObjectId): Promise<void> {
+        try {
+            const bookingIdString = typeof bookingId === 'string' ? bookingId : bookingId.toString();
+
+            const booking = await this.ibookingrepository.getBookingById(new mongoose.Types.ObjectId(bookingIdString));
+            
+            if (!booking) {
+                console.error(`Booking not found with ID: ${bookingIdString}`);
+                throw new Error("Booking not found");
+            }
+            
+            await this.ibookingrepository.updateBookingStatus(bookingIdString, 'completed');
+        } catch (error) {
+            console.error(`Error while completing the booking: ${error}`);
+            throw new Error(`Error while completing the booking: ${error}`);
+        }
+    }
+    
+
+    
 }

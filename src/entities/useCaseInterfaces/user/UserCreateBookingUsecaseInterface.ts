@@ -8,6 +8,8 @@ export interface UserCreateBookingUsecaseInterface {
         selectedDate: Date,
         paymentStatus: string,
         sessionId:string,
-        paymentIntentId: string
+        paymentIntentId: string,
+        amount:number,
+
     ): Promise<BookingType>;
 }

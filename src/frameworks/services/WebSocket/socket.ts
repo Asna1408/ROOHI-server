@@ -5,9 +5,6 @@ import { Server as SocketIoServer } from "socket.io";
 function initializeSocket(server: HTTPServer): SocketIoServer {
   console.log("Initializing socket");
 
-  
-  
-
 //   const allowedOrigins: any = [
 //     "https://elitemediator.shop",
 //     "https://www.elitemediator.shop"
@@ -28,7 +25,6 @@ function initializeSocket(server: HTTPServer): SocketIoServer {
 
     socket.on("disconnect", () => {
       console.log("User disconnected: " + socket.id);
-      // Handle any cleanup if necessary
     });
 
     socket.on("join room", (roomId) => {
@@ -37,19 +33,30 @@ function initializeSocket(server: HTTPServer): SocketIoServer {
       socket.emit('join room', roomId)
     });
 
-    socket.on('send-message', (data)=>{
-      console.log("sending message 😂😂😂😂😂😂😂😂");
-      io.to(data).emit('send-message', data);
+    socket.on('typing', (roomId) => {
+      socket.in(roomId).emit("typing")
     })
 
-  
-  
+    socket.on('stop typing', (roomId) => {
+      socket.in(roomId).emit("stop typing")
+    })
+
+    socket.on('notify', (id)=>{
+      console.log(id + '👌👌👌👌👌👌👌👌👌👌👌👌👌👌👌👌👌👌👍😍😘');
+      io.to(id).emit('notify', id);
+  })
+
+    socket.on('send-message', (data)=>{
+      console.log("sending message 😂😂😂😂😂😂😂😂",data);
+      io.to(data).emit('send-message', data);
+    })
   });
 
   return io;
 }
 
 
-
-
 export { initializeSocket };
+
+
+

@@ -1,5 +1,6 @@
 import { Model } from "mongoose";
 import { UserType } from "../../../entities/types/user/UserType";
+import { BannerType } from "../../../entities/types/admin/BannerType";
 
 export interface IUserRepository{
     getPaginatedData<T extends Document>(
@@ -18,4 +19,5 @@ export interface IUserRepository{
     UpdatePassword(userId:string,hashedPassword:string):Promise<any>;
     EditProfile(updateData:any,_id:string):Promise<any>
     // saveResetToken(userId: string, token: string, expiration: Date): Promise<void>;
+    getActiveBanners():Promise<BannerType | any> 
 }
