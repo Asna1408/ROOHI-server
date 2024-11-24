@@ -6,9 +6,15 @@ export class GetAllServiceCategoryUseCase implements IGetAllServiceCategoryUseCa
 
     constructor(private iadminrepository:IAdminRepository){}
 
-    async getServiceCategories(): Promise<any> {
-        return this.iadminrepository.getServiceCategories();
-      }
+    // async getServiceCategories(): Promise<any> {
+    //     return this.iadminrepository.getServiceCategories();
+    //   }
+
+    async getServiceCategories(skip: number, limit: number): Promise<{ categories: ServiceCategory[]; total: number }> {
+      const [categories, total] = await this.iadminrepository.getServiceCategories(skip, limit);
+      return { categories, total };
+    }
+    
 
       async getServiceCategoryById(id: string): Promise<any> {
         return this.iadminrepository.getServiceCategoryById(id);

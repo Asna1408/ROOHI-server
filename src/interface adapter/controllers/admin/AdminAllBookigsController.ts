@@ -10,15 +10,30 @@ export class AdminAllBookingController {
         private igetbookingcountusecase : GetBookingCountUsecaseInterface
       ){}
   
-    async getAllBookingDetails(req: Req, res: Res){
+    // async getAllBookingDetails(req: Req, res: Res){
+    //   try {
+        
+    //     const bookings = await this.iadminbookinddetailUsecase.getAllBookingDetails();
+    //     res.status(200).json(bookings); 
+    //   } catch (error) {
+    //     console.error('Error fetching booking details:', error);
+    //     res.status(500).json({ message: 'Failed to fetch booking details' }); 
+    //   }
+    // }
+
+    async getAllBookingDetails(req: Req, res: Res) {
       try {
-        const bookings = await this.iadminbookinddetailUsecase.getAllBookingDetails();
-        res.status(200).json(bookings); 
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 10;
+        
+        const bookings = await this.iadminbookinddetailUsecase.getAllBookingDetails(page, limit);
+        res.status(200).json(bookings);
       } catch (error) {
         console.error('Error fetching booking details:', error);
-        res.status(500).json({ message: 'Failed to fetch booking details' }); 
+        res.status(500).json({ message: 'Failed to fetch booking details' });
       }
     }
+    
 
 
     async getBookingById(req: Req, res: Res):Promise<void> {

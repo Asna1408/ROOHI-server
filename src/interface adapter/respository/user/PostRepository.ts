@@ -14,15 +14,34 @@ export class PostRepository implements IPostRepository{
     }
 
     //get services By provider
-    async getServicesByProvider(providerId: mongoose.Types.ObjectId): Promise<any> {
-        try {
-          // Assuming you have a Service model with the provider_id reference
-          const services = await ServiceModel.find({ provider_id: providerId }).populate("service_type").populate("provider_id","name email phone location");
-          return services;
-        } catch (error) {
-          throw new Error("Error fetching services");
-        }  
+    // async getServicesByProvider(providerId: mongoose.Types.ObjectId): Promise<any> {
+    //     try {
+    //       // Assuming you have a Service model with the provider_id reference
+    //       const services = await ServiceModel.find({ provider_id: providerId }).populate("service_type").populate("provider_id","name email phone location");
+    //       return services;
+    //     } catch (error) {
+    //       throw new Error("Error fetching services");
+    //     }  
+    //   }
+
+
+    async getServicesByProvider(providerId: mongoose.Types.ObjectId, skip: number, limit: number): Promise<{ services: any[]; total: number }> {
+      try {
+        const services = await ServiceModel.find({ provider_id: providerId })
+          .populate("service_type", "type_name")
+          .populate("provider_id", "name email phone location")
+          .sort({ createdAt: -1 }) // Optional: Sort by creation date
+          .skip(skip)
+          .limit(limit);
+    
+        const total = await ServiceModel.countDocuments({ provider_id: providerId }); // Total number of services
+    
+        return { services, total };
+      } catch (error) {
+        throw new Error("Error fetching services");
       }
+    }
+    
 
     //get each service by id
       async getPostById(postId: string): Promise<any> {

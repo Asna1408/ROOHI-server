@@ -33,24 +33,51 @@ export class BookingRepository implements IBookingRepository{
       await BookingModel.findByIdAndUpdate(bookingId, { status }).exec();
     }
 
-    async findBookingsByUserId(userId: string): Promise<any[]> {
-          const bookings = await BookingModel.find({user_id:userId}).populate('service_id', 'service_name').exec();
-          return bookings;
+    // async findBookingsByUserId(userId: string): Promise<any[]> {
+    //       const bookings = await BookingModel.find({user_id:userId}).populate('service_id', 'service_name').exec();
+    //       return bookings;
        
-      }
+    //   }
+
+    async findBookingsByUserId(userId: string, skip: number, limit: number): Promise<{ bookings: any[]; total: number }> {
+      const bookings = await BookingModel.find({ user_id: userId })
+        .populate('service_id', 'service_name')
+        .sort({ booking_date: -1 }) // Optional: Sort by booking date (most recent first)
+        .skip(skip)
+        .limit(limit)
+        .exec();
+    
+      const total = await BookingModel.countDocuments({ user_id: userId }); // Total bookings for pagination
+      return { bookings, total };
+    }
+    
+
+      // async getBookingsByProviderId(providerId:string) :Promise<BookingType | any>{
+      //   return await BookingModel.find({ provider_id: providerId })
+      //     .populate('user_id', 'name email')
+      //     .populate('service_id', 'service_name price');
+      // };
 
 
-      async getBookingsByProviderId(providerId:string) :Promise<BookingType | any>{
-        return await BookingModel.find({ provider_id: providerId })
+      async getBookingsByProviderId(providerId: string, skip: number, limit: number): Promise<{ bookings: any[]; total: number }> {
+        const bookings = await BookingModel.find({ provider_id: providerId })
           .populate('user_id', 'name email')
-          .populate('service_id', 'service_name price');
-      };
-
+          .populate('service_id', 'service_name price')
+          .sort({ booking_date: -1 }) // Optional: Sort by date
+          .skip(skip)
+          .limit(limit)
+          .exec();
+      
+        const total = await BookingModel.countDocuments({ provider_id: providerId }); // Get the total count
+        return { bookings, total };
+      }
+      
 
 //for review and rating
       async getBookingByUserAndService(userId: string, serviceId: string): Promise<BookingType | any> {
         return await BookingModel.findOne({ user_id: userId, service_id: serviceId }).select('status').exec();
     }
 
-  
+   
+    
 }

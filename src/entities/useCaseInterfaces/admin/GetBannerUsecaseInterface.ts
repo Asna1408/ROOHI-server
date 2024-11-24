@@ -2,5 +2,5 @@ import { BannerType } from "../../types/admin/BannerType";
 
 
 export interface GetBannerUsecaseInterface{
-    getBanners(): Promise<BannerType[]> 
+    getBanners(skip: number, limit: number): Promise<{ banners: BannerType[]; total: number }>
 }

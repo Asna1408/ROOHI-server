@@ -5,8 +5,10 @@ import { IAdminRepository } from "../../interface adapter/respository/admin/IAdm
 export class GetBannerUsecase implements GetBannerUsecaseInterface {
     constructor(private iadminrepository:IAdminRepository){}
 
-    async getBanners(): Promise<BannerType[]>  {
-        return await this.iadminrepository.getBanners();
-      }
+    async getBanners(skip: number, limit: number): Promise<{ banners: BannerType[]; total: number }> {
+      const [banners, total] = await this.iadminrepository.getBanners(skip, limit);
+      return { banners, total };
+    }
+    
 
 }

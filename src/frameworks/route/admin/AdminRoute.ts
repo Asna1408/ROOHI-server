@@ -31,6 +31,7 @@ AdminRoute.delete('/DeleteService-category/:id',InjectedGetAllServiceCategoryCon
 
 //Booking section
 AdminRoute.get('/bookdetails',InjectedGetBookingsUse.getAllBookingDetails.bind(InjectedGetBookingsUse))
+
 AdminRoute.get('/Bookdetails/:bookingId',InjectedGetBookingsUse.getBookingById.bind(InjectedGetBookingsUse))
 
 //dashboard section

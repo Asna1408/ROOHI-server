@@ -23,9 +23,23 @@ export class AdminRepository implements IAdminRepository{
         return await AdminModel.findOne({email});
     }
 
-    async GetAllUsers():Promise< any >{
-        return await UserModel.find().sort({ createdAt: -1 });
+    // async GetAllUsers():Promise< any >{
+    //     return await UserModel.find().sort({ createdAt: -1 });
+    // }
+
+    async GetAllUsers(skip: number, limit: number): Promise<[UserType[], number]> {
+      const users = await UserModel.find()
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean()
+        .exec();
+    
+      const total = await UserModel.countDocuments(); // Get the total count of users
+    
+      return [users as unknown as UserType[], total]; // Return the users and total count
     }
+    
 
     async BlockUser(userId: string): Promise<UserType | null> {
         return await UserModel.findByIdAndUpdate(
@@ -48,10 +62,22 @@ export class AdminRepository implements IAdminRepository{
         return await serviceCategory.save();
       }
     
-      async getServiceCategories(): Promise<any> {
-        return await ServiceCategoryModel.find();
-      }
+      // async getServiceCategories(): Promise<any> {
+      //   return await ServiceCategoryModel.find();
+      // }
     
+      async getServiceCategories(skip: number, limit: number): Promise<[ServiceCategory[], number]> {
+        const categories = await ServiceCategoryModel.find()
+          .sort({ createdAt: -1 })
+          .skip(skip)
+          .limit(limit)
+          .exec();
+      
+        const total = await ServiceCategoryModel.countDocuments(); // Total count of documents
+        return [categories as unknown as ServiceCategory[], total];
+      }
+      
+
       async getServiceCategoryById(id: string): Promise<any> {
         return await ServiceCategoryModel.findById(id);
       }
@@ -64,21 +90,41 @@ export class AdminRepository implements IAdminRepository{
         return await ServiceCategoryModel.findByIdAndDelete(id);
       }
 
-      async getBookingDetails():Promise<BookingType | any> {
+      // async getBookingDetails():Promise<BookingType | any> {
         
-          const bookings = await BookingModel.find()
-            .populate({
-              path: 'user_id',
-              select: 'name email', // Selecting the needed fields from the User model
-            })
-            .populate({
-              path: 'service_id',
-              select: 'service_name price', // Selecting service name and price from the Service model
-            })
-            .exec();
-          return bookings;
-        }
+      //     const bookings = await BookingModel.find()
+      //       .populate({
+      //         path: 'user_id',
+      //         select: 'name email', // Selecting the needed fields from the User model
+      //       })
+      //       .populate({
+      //         path: 'service_id',
+      //         select: 'service_name price', // Selecting service name and price from the Service model
+      //       })
+      //       .exec();
+      //     return bookings;
+      //   }
 
+      async getBookingDetails(skip: number, limit: number): Promise<[BookingType[], number]> {
+        const bookings = await BookingModel.find()
+          .populate({
+            path: 'user_id',
+            select: 'name email',
+          })
+          .populate({
+            path: 'service_id',
+            select: 'service_name price',
+          })
+          .skip(skip)
+          .limit(limit)
+          .lean() // Converts Mongoose documents to plain JavaScript objects
+          .exec();
+        
+        const total = await BookingModel.countDocuments(); // Get the total count of documents
+
+  return [bookings as BookingType[], total];
+      }
+      
 
         async findBookingById(bookingId: string):Promise<BookingType | any>  {
 
@@ -205,9 +251,17 @@ export class AdminRepository implements IAdminRepository{
           return await BannerModel.create(data);
         }
       
-        async getBanners(): Promise<BannerType[]> {
-          return await BannerModel.find();
+        async getBanners(skip: number, limit: number): Promise<[BannerType[], number]> {
+          const banners = await BannerModel.find()
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit)
+            .exec();
+        
+          const total = await BannerModel.countDocuments(); // Total number of banners
+          return [banners as unknown as BannerType[], total];
         }
+        
 
         async getBannerById(BannerId:string) : Promise <BannerType | any> {
           return await BannerModel.findById(BannerId)

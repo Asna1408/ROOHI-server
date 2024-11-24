@@ -171,32 +171,69 @@ export class BookingController {
   }
   
 
+// async getbookByUserId(req:Req,res:Res){
+//         const { userId } = req.params;
+
+//   try {
+//     if (!userId) {
+//       return res.status(400).json({ error: "User ID is required" });
+//     }
+
+//     const isValidObjectId = mongoose.Types.ObjectId.isValid(userId);
+//     if (!isValidObjectId) {
+//       return res.status(400).json({ error: "Invalid User ID format" });
+//     }
+
+//     const bookings = await this.igetBookingUsecaseInterface.getbookByUserId(userId);
+
+//     if (!bookings || bookings.length === 0) {
+//       return res.status(404).json({ message: "No bookings found for this user" });
+//     }
+
+//     return res.status(200).json(bookings);
+
+//   } catch (error) {
+//     console.error("Error fetching bookings:", error);
+//     return res.status(500).json({ error: "Failed to fetch booking details", details: error });
+//   }
+//     }
+
+
 async getbookByUserId(req:Req,res:Res){
-        const { userId } = req.params;
-
-  try {
-    if (!userId) {
-      return res.status(400).json({ error: "User ID is required" });
+          const { userId } = req.params;
+          const page = parseInt(req.query.page as string, 10) || 1; // Default to page 1
+          const limit = parseInt(req.query.limit as string, 10) || 10; // Default to 10 items per page
+          const skip = (page - 1) * limit;
+  
+    try {
+      if (!userId) {
+        return res.status(400).json({ error: "User ID is required" });
+      }
+  
+      const isValidObjectId = mongoose.Types.ObjectId.isValid(userId);
+      if (!isValidObjectId) {
+        return res.status(400).json({ error: "Invalid User ID format" });
+      }
+  
+      const { bookings, total } = await this.igetBookingUsecaseInterface.getbookByUserId(userId, skip, limit);
+  
+      if (!bookings || bookings.length === 0) {
+        return res.status(404).json({ message: "No bookings found for this user" });
+      }
+  
+      return res.status(200).json({
+        bookings,
+        total,
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+      });
+  
+    } catch (error) {
+      console.error("Error fetching bookings:", error);
+      return res.status(500).json({ error: "Failed to fetch booking details", details: error });
     }
-
-    const isValidObjectId = mongoose.Types.ObjectId.isValid(userId);
-    if (!isValidObjectId) {
-      return res.status(400).json({ error: "Invalid User ID format" });
-    }
-
-    const bookings = await this.igetBookingUsecaseInterface.getbookByUserId(userId);
-
-    if (!bookings || bookings.length === 0) {
-      return res.status(404).json({ message: "No bookings found for this user" });
-    }
-
-    return res.status(200).json(bookings);
-
-  } catch (error) {
-    console.error("Error fetching bookings:", error);
-    return res.status(500).json({ error: "Failed to fetch booking details", details: error });
-  }
-    }
+      }
+  
 
 
       async getBookingDetailsById(req: Req, res: Res): Promise<void> {
@@ -211,24 +248,55 @@ async getbookByUserId(req:Req,res:Res){
       }
 
 
-      async getProviderBookingsController(req:Req, res:Res) {
-           const { providerId } = req.params;
+    //   async getProviderBookingsController(req:Req, res:Res) {
+    //        const { providerId } = req.params;
 
-        try {
-          if (!providerId) {
-            return res.status(400).json({ error: "User ID is required" });
-          }
-          const isValidObjectId = mongoose.Types.ObjectId.isValid(providerId);
-    if (!isValidObjectId) {
-      return res.status(400).json({ error: "Invalid Provider ID format" });
-    }
+    //     try {
+    //       if (!providerId) {
+    //         return res.status(400).json({ error: "User ID is required" });
+    //       }
+    //       const isValidObjectId = mongoose.Types.ObjectId.isValid(providerId);
+    // if (!isValidObjectId) {
+    //   return res.status(400).json({ error: "Invalid Provider ID format" });
+    // }
       
-    const bookings = await this.igetbookingbyproviderIdUsecaseInterface.getProviderBookings(providerId);
-          return res.status(200).json(bookings);
-        } catch (error) {
-          return res.status(500).json({ message: error});
+    // const bookings = await this.igetbookingbyproviderIdUsecaseInterface.getProviderBookings(providerId);
+    //       return res.status(200).json(bookings);
+    //     } catch (error) {
+    //       return res.status(500).json({ message: error});
+    //     }
+    //   };
+
+
+    async getProviderBookingsController(req: Req, res: Res) {
+      const { providerId } = req.params;
+      const page = parseInt(req.query.page as string, 10) || 1; // Default to page 1
+      const limit = parseInt(req.query.limit as string, 10) || 10; // Default to 10 items per page
+      const skip = (page - 1) * limit;
+    
+      try {
+        if (!providerId) {
+          return res.status(400).json({ error: "Provider ID is required" });
         }
-      };
+    
+        const isValidObjectId = mongoose.Types.ObjectId.isValid(providerId);
+        if (!isValidObjectId) {
+          return res.status(400).json({ error: "Invalid Provider ID format" });
+        }
+    
+        const { bookings, total } = await this.igetbookingbyproviderIdUsecaseInterface.getProviderBookings(providerId, skip, limit);
+    
+        return res.status(200).json({
+          bookings,
+          total,
+          currentPage: page,
+          totalPages: Math.ceil(total / limit),
+        });
+      } catch (error) {
+        return res.status(500).json({ message: error });
+      }
+    }
+    
 
     
       async getBookingStatus(req:Req, res:Res) {

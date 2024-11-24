@@ -46,23 +46,52 @@ export class UserPostController {
     }
 
 
+    // async GetAllPost(req: Req, res: Res) {
+    //     try {
+    //       console.log("Full URL:", req.originalUrl); // Log the full URL
+    //       console.log("Provider ID from Params:", req.params.providerId); // Log the provider ID from the request
+      
+    //       const providerId = new mongoose.Types.ObjectId(req.params.providerId);
+    //       console.log("Converted Provider ID:", providerId); // Ensure correct conversion
+      
+    //       const services = await this.usergetpostusecaseinterface.GetAllPost(providerId);
+    //       console.log("Fetched Services:", services); // Log fetched services
+      
+    //       res.status(200).json(services);
+    //     } catch (error) {
+    //       console.error("Error fetching services:", error);
+    //       res.status(500).json({ message: error });
+    //     }
+    //   }
+
     async GetAllPost(req: Req, res: Res) {
-        try {
-          console.log("Full URL:", req.originalUrl); // Log the full URL
-          console.log("Provider ID from Params:", req.params.providerId); // Log the provider ID from the request
-      
-          const providerId = new mongoose.Types.ObjectId(req.params.providerId);
-          console.log("Converted Provider ID:", providerId); // Ensure correct conversion
-      
-          const services = await this.usergetpostusecaseinterface.GetAllPost(providerId);
-          console.log("Fetched Services:", services); // Log fetched services
-      
-          res.status(200).json(services);
-        } catch (error) {
-          console.error("Error fetching services:", error);
-          res.status(500).json({ message: error });
-        }
+      try {
+        console.log("Full URL:", req.originalUrl);
+        console.log("Provider ID from Params:", req.params.providerId);
+    
+        const providerId = new mongoose.Types.ObjectId(req.params.providerId);
+        console.log("Converted Provider ID:", providerId);
+    
+        const page = parseInt(req.query.page as string, 10) || 1; // Default to page 1
+        const limit = parseInt(req.query.limit as string, 10) || 10; // Default to 10 items per page
+        const skip = (page - 1) * limit;
+    
+        const { services, total } = await this.usergetpostusecaseinterface.GetAllPost(providerId, skip, limit);
+    
+        console.log("Fetched Services:", services);
+    
+        res.status(200).json({
+          services,
+          total,
+          currentPage: page,
+          totalPages: Math.ceil(total / limit),
+        });
+      } catch (error) {
+        console.error("Error fetching services:", error);
+        res.status(500).json({ message: error });
       }
+    }
+    
 
 
       async getPost(req: Req, res: Res) {

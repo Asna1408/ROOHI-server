@@ -24,14 +24,29 @@ export class GetAllServiceController {
     }
   }
 
+  // async getServiceCategories(req: Req, res: Res): Promise<void> {
+  //   try {
+  //     const serviceCategories = await this.getAllServiceUseCase.getServiceCategories();
+  //     res.status(200).json(serviceCategories);
+  //   } catch (error) {
+  //     res.status(500).json({ error: 'Unable to retrieve service categories' });
+  //   }
+  // }
+
   async getServiceCategories(req: Req, res: Res): Promise<void> {
     try {
-      const serviceCategories = await this.getAllServiceUseCase.getServiceCategories();
-      res.status(200).json(serviceCategories);
+      const page = parseInt(req.query.page as string) || 1; // Default to page 1
+      const limit = parseInt(req.query.limit as string) || 10; // Default to 10 items per page
+      const skip = (page - 1) * limit;
+  
+      const { categories, total } = await this.getAllServiceUseCase.getServiceCategories(skip, limit);
+  
+      res.status(200).json({ categories, total, currentPage: page, totalPages: Math.ceil(total / limit) });
     } catch (error) {
       res.status(500).json({ error: 'Unable to retrieve service categories' });
     }
   }
+  
 
   async getServiceCategoryById(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
