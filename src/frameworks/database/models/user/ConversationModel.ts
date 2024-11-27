@@ -8,7 +8,15 @@ const ConversationSchema = new mongoose.Schema(
                 ref: "User",
                 required: true
             }
-        ]
+        ],
+        lastMessage: {
+            type: String,
+            default: ''
+        },
+        unreadCount: {
+            type: Number,
+            default: 0
+        }
     },
     { timestamps: true }
 );

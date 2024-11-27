@@ -3,9 +3,9 @@ export type PayoutType = {
   providerId: string;
   amount: number;
   currency: string;
-  stripeTransferId?: string;
+  stripeTransferId?: string | null;
   status: 'pending' | 'completed' | 'failed';
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
   failureMessage?: string;
 }

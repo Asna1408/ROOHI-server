@@ -33,4 +33,25 @@ export class ChatRepository implements IChatRepository{
     return await MessageModel.find({ conversationId }).sort({ _id: 1 }).exec();
   }
 
+
+  async updateConversationWithLatestMessage(conversationId: string, messageText: string) {
+    return await ConversationModel.findByIdAndUpdate(
+      conversationId,
+      { 
+        lastMessage: messageText,
+        $inc: { unreadCount: 1 }  // Increment unread count
+      },
+      { new: true } // Return the updated conversation
+    );
+  }
+
+  // Reset unread count (mark as read)
+  async resetUnreadCount(conversationId: string) {
+    return await ConversationModel.findByIdAndUpdate(
+      conversationId,
+      { unreadCount: 0 },
+      { new: true }
+    );
+  }
+
 }

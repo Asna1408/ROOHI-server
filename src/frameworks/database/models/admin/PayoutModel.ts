@@ -18,17 +18,13 @@ const PayoutSchema = new mongoose.Schema({
     },
     stripeTransferId: {
          type: String, 
-         
+         required: false,
         },
     status: { 
         type: String, 
         enum: ['pending', 'completed', 'failed'], 
         default: 'pending' 
     },
-    failureMessage: {
-         type: String 
-        },
-        
   }, { timestamps: true });
   
   export  const Payout = mongoose.model('Payout', PayoutSchema);

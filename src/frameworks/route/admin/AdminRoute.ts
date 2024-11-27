@@ -50,6 +50,8 @@ AdminRoute.delete('/banner/deleteBanner/:BannerId',InjectedBannerUse.deleteBanne
 
 //payout section
 AdminRoute.post('/initiate-payout',InjectedPayoutController.initiatePayout.bind(InjectedPayoutController))
+AdminRoute.get('/payouts/:status',InjectedPayoutController.getPayouts.bind(InjectedPayoutController))
+
 
 
 export default AdminRoute ;

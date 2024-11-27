@@ -35,8 +35,6 @@ export class ChatController {
       }
 
       async sendMessage(req: Req, res: Res) {
-
-        
         try {
           const message = await this.icreatemessageusecase.sendMessage(req.body);
           return res.status(200).json(message);

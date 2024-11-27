@@ -22,12 +22,14 @@ import { GetBookingDetailsUsecase } from "../../../usecases/admin/GetBookingDeta
 import { GetUserCountUsecase } from "../../../usecases/admin/GetUserCountUsecase";
 import { UnblockUserUseCase } from "../../../usecases/admin/UnBlockUserUseCase";
 import { UpdateBannerUsecase } from "../../../usecases/admin/UpdateBannerUsecase";
-import { AdminPayoutUsecase } from "../../../usecases/admin/AdminPayoutUsecase";
 import { AdminDashboardUsecase } from "../../../usecases/admin/AdminDashboard";
 import { AdminDashboardController } from "../../../interface adapter/controllers/admin/AdminDashboardController";
+import { PayoutRepository } from "../../../interface adapter/respository/admin/PayoutRepository";
+import { PayoutUseCase } from "../../../usecases/admin/PayoutUsecase";
 
 
 const AdminMonoRepository = new AdminRepository()
+const AdminPayoutRepository = new PayoutRepository()
 
 //login
 const AdminLoginUse = new AdminLoginUseCase(AdminMonoRepository)
@@ -90,7 +92,7 @@ const DeleteBannerUse = new DeleteBannerUsecase(AdminMonoRepository)
 export const InjectedBannerUse = new BannerController(CreateBannerUse,GetBannerUse,GetBannerByIdUse,UpdateBannerUse,DeleteBannerUse) 
 
 //Payout 
-const PayoutUse = new AdminPayoutUsecase(AdminMonoRepository)
+const PayoutUse = new PayoutUseCase(AdminPayoutRepository)
 
 export const InjectedPayoutController = new PayoutController(PayoutUse)
 

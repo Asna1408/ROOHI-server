@@ -277,40 +277,7 @@ export class AdminRepository implements IAdminRepository{
         }
 
 
-        async createPayout(providerId: string, amount: number): Promise<string> {
-          const providerStripeAccount = await this.getProviderStripeAccount(providerId);
-          if (!providerStripeAccount) {
-              throw new Error("Provider does not have a Stripe account.");
-          }
 
-          const account = await stripe.accounts.retrieve(providerStripeAccount);
-        if (account.capabilities?.transfers !== 'active') {
-            // If 'transfers' capability is not active, request it
-            const updatedAccount = await stripe.accounts.update(providerStripeAccount, {
-                capabilities: {
-                    transfers: { requested: true },
-                },
-            });
-            console.log(`Transfer capability requested for account ${providerStripeAccount}`);
-            console.log(updatedAccount,"update transfer acocunt")
-        }
-  
-          const payout = await stripe.transfers.create({
-              amount: amount * 100, // convert to cents
-              currency: 'usd',
-              destination: providerStripeAccount,
-              transfer_group: `provider_${providerId}`,
-          });
-  
-          return payout.id;
-      }
-  
-      async getProviderStripeAccount(providerId: string): Promise<string | null> {
-        const objectId =  new mongoose.Types.ObjectId(providerId);
-
-        const provider = await UserModel.findById(objectId);
-          return provider?.stripeAccountId || null;
-      }
-
+      
 
       }

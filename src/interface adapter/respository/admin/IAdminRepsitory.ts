@@ -31,6 +31,5 @@ export interface IAdminRepository{
    getBannerById(BannerId:string) : Promise <BannerType>
   updateBanner(BannerId: string, data: BannerType): Promise<BannerType | null> 
   deleteBanner(BannerId: string): Promise<BannerType | null>
-  createPayout(providerId: string, amount: number): Promise<string>;
-  getProviderStripeAccount(providerId: string): Promise<string | null>;
+  
 }
