@@ -7,10 +7,15 @@ export class FetchingReviewDateUsecase implements FetchingReviewDateUsecaseInter
     ){}
 
  async FetchBookingStatus(userId: string,serviceId:string,): Promise<BookingType | any> {
-    const booking = await this.ibookingrepository.getBookingByUserAndService(userId, serviceId);
+   try{
+   const booking = await this.ibookingrepository.getBookingByUserAndService(userId, serviceId);
     if (!booking) {
       throw new Error('Booking not found');
     }
     return booking;
- }
+   }catch(error){
+      throw new Error("Error occured when Fetching Booking Status")
+   }
+
+   }
 }

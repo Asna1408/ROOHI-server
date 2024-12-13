@@ -6,6 +6,10 @@ export class AddServiceCategoryUseCase implements IAddServiceCategoryUseCase {
   constructor(private iadminrepository: IAdminRepository) {}
 
   async addServiceCategory(type_name: string, description: string): Promise<any> {
+    try{
     return this.iadminrepository.addServiceCategory(type_name, description);
+    }catch(error){
+      throw new Error("Error occcured add category")
+    }
   }
 }

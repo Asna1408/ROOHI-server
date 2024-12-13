@@ -8,6 +8,8 @@ export class CreateConversationUseCase implements CreateConversationUseCaseInter
 constructor(private ichatrepository : IChatRepository ){}
 
   async createOrRetrieveConversation(senderId: string, receiverId: string): Promise<ConversationType | any> {
+   
+    try{
     let conversation = await this.ichatrepository .findExistingConversation(senderId, receiverId);
 
     if (!conversation) {
@@ -15,5 +17,9 @@ constructor(private ichatrepository : IChatRepository ){}
     }
 
     return conversation;
+
+  }catch(error){
+    throw new Error("error occured when creating or retrieving conversation")
+  }
   }
 }

@@ -25,7 +25,9 @@ export class UserForgetPassUseCase implements IUserForgetPassUsecase{
 }
 
 async SendVerificationEmail(email: string, link: string): Promise<boolean> {
-    const user: any = await this.iuserrepository.FindByEmail(email);
+   
+  try{
+  const user: any = await this.iuserrepository.FindByEmail(email);
 
     if(!user){
       return false
@@ -39,7 +41,9 @@ async SendVerificationEmail(email: string, link: string): Promise<boolean> {
       return false
     }
 
-
+  }catch(error){
+throw new Error("Error occured while sending mail")
+  }
 
     
   }

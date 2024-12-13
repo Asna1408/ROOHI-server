@@ -46,6 +46,10 @@ const transfer = await stripe.transfers.create({
   }
 
   async getPayoutsByStatus(status: string): Promise<PayoutType | any> {
+    try{
     return await this.payoutRepository.getPayoutsByStatus(status);
+    }catch(error){
+      throw new Error("error on fetching payout status")
+    }
   }
 }

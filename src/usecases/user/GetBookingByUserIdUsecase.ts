@@ -8,25 +8,7 @@ export class GetBookingByUserIdUsecase implements GetBookingByUserIdUsecaseInter
     constructor(private ibookingrepository: IBookingRepository,
     ) {}
 
-   
-    // async getbookByUserId(userId: string): Promise<any[]> {
-    
-    //     if (!userId) {
-    //       throw new Error('User ID is required');
-    //     }
-    
-    //     try {
-    //       const bookings = await this.ibookingrepository.findBookingsByUserId(userId);
-    //       if (!bookings.length) {
-    //         throw new Error('No bookings found for this user');
-    //       }
-    //       return bookings;
-    //     } catch (error) {
-    //       throw new Error(" failed in fetching the details");
-    //     }
-
-    // }
-
+  
     async getbookByUserId(userId: string, skip: number, limit: number): Promise<{ bookings: any[]; total: number }> {
       if (!userId) {
         throw new Error('User ID is required');

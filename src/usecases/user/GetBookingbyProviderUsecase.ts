@@ -10,23 +10,6 @@ export class GetBookingbyProviderUsecase implements GetBookingbyProviderUsecaseI
     constructor(private ibookingrepository: IBookingRepository,
     ) {}
 
-    // async getProviderBookings(providerId:string):Promise<BookingType | any>{      
-    
-    //   if (!providerId) {
-    //     throw new Error('Provider ID not found');
-    //   }
-
-    // try{
-    //   const bookings = await this.ibookingrepository.getBookingsByProviderId(providerId);
-    //   if (!bookings.length) {
-    //     throw new Error('No bookings found for this user');
-    //   }
-    //   return bookings;
-    // }catch{
-    //     throw new Error(" failed in fetching the details");
-    //   }
-    // };
-
     async getProviderBookings(providerId: string, skip: number, limit: number): Promise<{ bookings: any[]; total: number }> {
       if (!providerId) {
         throw new Error('Provider ID not found');

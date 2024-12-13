@@ -16,33 +16,30 @@ export class BannerController{
 
     async createBanner(req: Req, res: Res) {
         try {
-            // Log request body for debugging
             console.log("Request body:", req.body);
 
             // Extract data from request body
             const { title, description , isActive} = req.body;
 
-            // Validate required fields
             if (!title || !description ) {
-                return res.status(400).json({ message: "Missing required fields" }); // Return to avoid further execution
+                return res.status(400).json({ message: "Missing required fields" }); 
             }
 
             const BannerData = req.body;
 
-            // Call use case to create service
             const newBanner = await this.icreatebannerusecaseinterface.createBanner(BannerData);
-            return res.status(201).json({ message: "Banner created successfully", Banner: newBanner }); // Return after sending response
+            return res.status(201).json({ message: "Banner created successfully", Banner: newBanner }); 
         } catch (error) {
             console.error("Error adding Banner:", error);
-            return res.status(500).json({ message: "Internal server error", error: error }); // Return after sending response
+            return res.status(500).json({ message: "Internal server error", error: error }); 
         }
     }
 
 
     async GetAllBanner(req: Req, res: Res): Promise<void> {
         try {
-          const page = parseInt(req.query.page as string, 10) || 1; // Default to page 1
-          const limit = parseInt(req.query.limit as string, 10) || 10; // Default to 10 items per page
+          const page = parseInt(req.query.page as string, 10) || 1; 
+          const limit = parseInt(req.query.limit as string, 10) || 10; 
           const skip = (page - 1) * limit;
       
           const { banners, total } = await this.igetallbannerusecaseinterface.getBanners(skip, limit);
@@ -66,7 +63,6 @@ export class BannerController{
             const BannerId = req.params.BannerId; 
             const updatedData = req.body; 
 
-            // Call use case to update the post
             const updatedBanner = await this.iupdateBannerusecaseinterface.updateBanner(BannerId, updatedData);
             
             if (!updatedBanner) {
@@ -99,9 +95,8 @@ export class BannerController{
 
     async deleteBanner(req: Req, res: Res): Promise<any> {
         try {
-            const BannerId = req.params.BannerId; // Get the post ID from params
+            const BannerId = req.params.BannerId; 
 
-            // Call use case to delete the post
             const deletedBanner = await this.ideleteBannerusecaseinterface.deleteBanner(BannerId);
             
             if (!deletedBanner) {

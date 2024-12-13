@@ -7,7 +7,11 @@ export class GetBannerByIdUsecase implements GetBannerByIdUseCaseInterface{
   
 
 async getBannerById(BannerId: string): Promise<BannerType> {
+  try{
     return await this.iadminrepository.getBannerById(BannerId);
+  }catch(error){
+    throw new Error("Error on fetching banner by id")
+  }
   }
 
 }

@@ -26,7 +26,7 @@ export class UserResendOtpUseCase implements IUserResendOtpUseCase {
         upperCaseAlphabets: false,
         lowerCaseAlphabets: false,
         specialChars: false,
-        digits: true, // Ensure it's a digit-only OTP
+        digits: true, 
       });
 
       // Update the user with the new OTP

@@ -7,11 +7,16 @@ export class AdminLoginUseCase implements IAdminLoginUseCase{
     constructor(private adminRepository: IAdminRepository){}
     
     async AdminLogin(email:string,password:string): Promise<AdminType | string>{
+        try{
         const emailExist:any = await this.adminRepository.LoginAdmin(email);
         if(emailExist && emailExist?.password === password){
             return emailExist
         }else{
             return "Invalid";
         }
+
+    }catch(error){
+        throw new Error("Error occured when admin login")
+    }
     }
 }

@@ -7,6 +7,12 @@ export class GetReviewByserviceIdUsecase implements GetReviewByserviceIdUsecaseI
  constructor(private ireviewrepository : IReviewRepository ){}
 
 async getReviewsByService(serviceId:mongoose.Types.ObjectId): Promise<ReviewType[] |any> {
-    return this.ireviewrepository.getReviewsByService(serviceId);
+    
+  try{
+  return this.ireviewrepository.getReviewsByService(serviceId);
+  }catch(error){
+    throw new Error("Error occured when fetching the reviews")
   }
+
+}
 }

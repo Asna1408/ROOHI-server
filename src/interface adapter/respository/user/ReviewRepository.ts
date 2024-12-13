@@ -39,8 +39,11 @@ export class ReviewRepository implements IReviewRepository{
 
 
       async getReviewsByService(service_id:mongoose.Types.ObjectId): Promise<ReviewType[]|any> {
+try{
         return ReviewModel.find({ service_id }).populate('user_id', 'name').exec();
+
+      }catch(error){
+        throw new Error("error occured when finding the review by service")
       }
-
-
+    }
 }

@@ -2,6 +2,9 @@
 import { Server as HTTPServer } from "http";
 import { Server as SocketIoServer } from "socket.io";
 
+const onlineUsers = new Map<string, string>(); // Map of userId to socketId
+
+
 function initializeSocket(server: HTTPServer): SocketIoServer {
   console.log("Initializing socket");
 
@@ -10,6 +13,7 @@ function initializeSocket(server: HTTPServer): SocketIoServer {
 //     "https://www.elitemediator.shop"
 //   ];
   
+
   const io = new SocketIoServer(server, {
     cors: {
       origin: "*",
@@ -23,7 +27,19 @@ function initializeSocket(server: HTTPServer): SocketIoServer {
   io.on("connection", (socket) => {
     console.log("A user connected: " + socket.id);
 
+    socket.on("user-connected", (userId: string) => {
+      onlineUsers.set(userId, socket.id);
+      io.emit("update-online-status", Array.from(onlineUsers.keys()));
+    });
+
+
+
     socket.on("disconnect", () => {
+      const disconnectedUserId = [...onlineUsers.entries()].find(([_, id]) => id === socket.id)?.[0];
+      if (disconnectedUserId) {
+        onlineUsers.delete(disconnectedUserId);
+        io.emit("update-online-status", Array.from(onlineUsers.keys()));
+      }
       console.log("User disconnected: " + socket.id);
     });
 
@@ -57,6 +73,8 @@ function initializeSocket(server: HTTPServer): SocketIoServer {
 
 
 export { initializeSocket };
+
+
 
 
 

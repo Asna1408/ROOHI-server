@@ -13,6 +13,8 @@ export class GetServiceAvailabiltyUseCase implements GetServiceAvailabiltyUsecas
         private ibookrepository:IBookingRepository) {}
 
     async getdates(serviceId: string): Promise<ServiceAvailability> {
+       
+       try{
         const service = await this.ipostrepository.getPostById(serviceId);
 
         if (!service) {
@@ -26,5 +28,9 @@ export class GetServiceAvailabiltyUseCase implements GetServiceAvailabiltyUsecas
             availableDates,
             bookedDates: bookedDateStrings,
           }; // Assuming availability is an array of Date objects
-    }
+        }catch(error){
+            throw new Error("Error occured when taking the dates")
+        }
+    
+        }
 }

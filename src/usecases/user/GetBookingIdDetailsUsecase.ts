@@ -11,6 +11,8 @@ export class GetBookingIdDetailsUsecase implements GetBookingIdDetailsUsecaseInt
     }
   
     async getbookingdetailsById(BookingId: string): Promise<BookingType | null> {
+     
+     try{
       if (!BookingId) {
         throw new Error('Booking ID is required');
       }
@@ -22,5 +24,9 @@ export class GetBookingIdDetailsUsecase implements GetBookingIdDetailsUsecaseInt
       }
   
       return booking;
+
+    }catch(error){
+      throw new Error("Error occured when fetching booking details By Id ")
+    }
     }
   }

@@ -6,7 +6,11 @@ export class GetUserCountUsecase implements GetUserCountUsecaseInterface{
      constructor(private iadminrepository:IAdminRepository){}
 
 async getUserCount() :Promise<UserType>{
+  try{
     return await this.iadminrepository.getUserCount();
+  }catch(error){
+    throw new Error("Error occured when getting user count")
+  }
   };
 
 }

@@ -6,6 +6,10 @@ export class GetMessageByIdUseCase implements GetMessageByIdUseCaseInterface {
     constructor(private ichatRepository : IChatRepository){}
   
     async getMessagesByConversationId(conversationId: string): Promise<MessageType[]> {
-      return await this.ichatRepository .findMessagesByConversationId(conversationId);
+      try{
+      return await this.ichatRepository.findMessagesByConversationId(conversationId);
+      }catch(error){
+        throw new Error("Error occured when fetching the messages")
+      }
     }
   }

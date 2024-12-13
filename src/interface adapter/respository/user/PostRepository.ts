@@ -7,34 +7,27 @@ import { IPostRepository } from "./IPostRepository";
 export class PostRepository implements IPostRepository{
     
   //addservice
-  async addService(serviceData:ServiceType):Promise<any>{
-       const service = new ServiceModel(serviceData)
-       return await service.save();
+  async addService(serviceData:ServiceType):Promise<any>{  
+    try {
+      const service = new ServiceModel(serviceData);
+      return await service.save();
+  } catch (error) {
+      console.error("Error saving service to database:", error);
+      throw error;
+  }
    
     }
-
-    //get services By provider
-    // async getServicesByProvider(providerId: mongoose.Types.ObjectId): Promise<any> {
-    //     try {
-    //       // Assuming you have a Service model with the provider_id reference
-    //       const services = await ServiceModel.find({ provider_id: providerId }).populate("service_type").populate("provider_id","name email phone location");
-    //       return services;
-    //     } catch (error) {
-    //       throw new Error("Error fetching services");
-    //     }  
-    //   }
-
 
     async getServicesByProvider(providerId: mongoose.Types.ObjectId, skip: number, limit: number): Promise<{ services: any[]; total: number }> {
       try {
         const services = await ServiceModel.find({ provider_id: providerId })
           .populate("service_type", "type_name")
           .populate("provider_id", "name email phone location")
-          .sort({ createdAt: -1 }) // Optional: Sort by creation date
+          .sort({ createdAt: -1 }) 
           .skip(skip)
           .limit(limit);
     
-        const total = await ServiceModel.countDocuments({ provider_id: providerId }); // Total number of services
+        const total = await ServiceModel.countDocuments({ provider_id: providerId }); 
     
         return { services, total };
       } catch (error) {
@@ -45,17 +38,29 @@ export class PostRepository implements IPostRepository{
 
     //get each service by id
       async getPostById(postId: string): Promise<any> {
+        try {
         return await ServiceModel.findById(postId).exec()
+         } catch (error) {
+          throw new Error("Error fetching services By Id: " + error);
+        }
       }
 
     //edit service
       async updatePost(postId: mongoose.Types.ObjectId, updatedData: any): Promise<any> {
+        try {
         return await ServiceModel.findByIdAndUpdate(postId, updatedData, { new: true });
+         } catch (error) {
+          throw new Error("Error updating services: " + error);
+        }
     }
 
     //delete service
     async deletePost(postId: mongoose.Types.ObjectId): Promise<any> {
+      try {
         return await ServiceModel.findByIdAndDelete(postId);
+      }catch (error) {
+        throw new Error("Error deleting services: " + error);
+      }
     }
 
     //To display all service in database in shop

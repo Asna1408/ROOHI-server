@@ -8,16 +8,21 @@ import bcrypt from "bcrypt"
 export class GoogleAuthUseCase implements IGoogleAuth{
     constructor(private UserRepository: IUserRepository){}
     async GoogleAuthLogin(user: UserType): Promise<string | UserType | null | undefined | any> {
+     
+     try{
       const existingUser: any = await this.UserRepository.FindByEmail(user.email);
 
       if (existingUser) {
+        if (existingUser.isBlocked) {
+          return  "Your account is blocked" ; 
+        }
+
         return {
                 existingUser ,
           alreadyRegistered: true,
         };
       } else {
         // Generate a random password
-      
         const plainPassword = crypto.randomBytes(8).toString("hex");
         
         // Hash the password using bcrypt
@@ -30,5 +35,11 @@ export class GoogleAuthUseCase implements IGoogleAuth{
         const newUser = await this.UserRepository.GoogleOAuth(user);
         return newUser;
       }
+     }catch(error){
+      throw new Error("Error occured when Login through Google")
+     }
+    
     }
+
+
 }

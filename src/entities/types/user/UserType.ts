@@ -1,17 +1,13 @@
 export type UserType = {
+    _id?:string;
  name: string;
  email: string;
  password: string;
  phone: number;
  otp?: string;
  isBlocked?: boolean;
- ProfilePicture?:string;
- alreadyRegistered?: boolean;
- resetToken?: string;
- resetTokenExpiration?: Date;
  verified?: boolean;
  stripeAccountId?:String;
- stripePayoutBalance?: Number,
  createdAt?: number;
  updatedAt?: number;
 

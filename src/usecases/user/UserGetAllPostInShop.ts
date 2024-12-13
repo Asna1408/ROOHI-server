@@ -8,6 +8,11 @@ export class UserGetAllPostInShopUseCase implements UserGetAllPostInShopUseCaseI
 
 
   async fetchAllServices():Promise<any> {
+
+    try{
     return await this.ipostrepository.getAllServices();
+  }catch(error){
+    throw new Error("an error occured when fetching the all post")
   }
+}
 }

@@ -20,14 +20,15 @@ const stripe = new Stripe('sk_test_51Q7VPGGWw2JRPJ2CWnRQe4HqZgOx1J2UqVdGqoSiMZq0
 export class AdminRepository implements IAdminRepository{
 
     async LoginAdmin(email:string):Promise<AdminType| null >{
+      try{
         return await AdminModel.findOne({email});
+      }catch(error){
+        throw new Error("Error occured Admin Login")
+      }
     }
 
-    // async GetAllUsers():Promise< any >{
-    //     return await UserModel.find().sort({ createdAt: -1 });
-    // }
-
     async GetAllUsers(skip: number, limit: number): Promise<[UserType[], number]> {
+      try{
       const users = await UserModel.find()
         .sort({ createdAt: -1 })
         .skip(skip)
@@ -35,77 +36,91 @@ export class AdminRepository implements IAdminRepository{
         .lean()
         .exec();
     
-      const total = await UserModel.countDocuments(); // Get the total count of users
+      const total = await UserModel.countDocuments(); 
     
-      return [users as unknown as UserType[], total]; // Return the users and total count
+      return [users as unknown as UserType[], total]; 
+    }catch(error){
+      throw new Error("Error occured Admin Login")
+    }
     }
     
 
     async BlockUser(userId: string): Promise<UserType | null> {
-        return await UserModel.findByIdAndUpdate(
+      try{  
+      return await UserModel.findByIdAndUpdate(
           userId,
           { isBlocked: true },
           { new: true }
         );
+      }catch(error){
+        throw new Error("Error occured Admin Login")
+      }
       }
     
       async UnblockUser(userId: string): Promise<UserType | null> {
+        try{  
         return await UserModel.findByIdAndUpdate(
           userId,
           { isBlocked: false },
           { new: true }
         );
+      }catch(error){
+          throw new Error("Error occured Admin Login")
+        }
       }
 
       async addServiceCategory(type_name: string, description: string): Promise<any> {
+        try{  
         const serviceCategory = new ServiceCategoryModel({ type_name, description });
         return await serviceCategory.save();
+        }catch(error){
+          throw new Error("Error occured Admin Login")
+        }
       }
     
-      // async getServiceCategories(): Promise<any> {
-      //   return await ServiceCategoryModel.find();
-      // }
-    
       async getServiceCategories(skip: number, limit: number): Promise<[ServiceCategory[], number]> {
+        try{  
         const categories = await ServiceCategoryModel.find()
           .sort({ createdAt: -1 })
           .skip(skip)
           .limit(limit)
           .exec();
       
-        const total = await ServiceCategoryModel.countDocuments(); // Total count of documents
+        const total = await ServiceCategoryModel.countDocuments(); 
         return [categories as unknown as ServiceCategory[], total];
+      }catch(error){
+        throw new Error("Error occured Admin Login")
+      }
       }
       
 
       async getServiceCategoryById(id: string): Promise<any> {
+        try{  
         return await ServiceCategoryModel.findById(id);
+      }catch(error){
+        throw new Error("Error occured Admin Login")
+      }
       }
     
       async editServiceCategory(id: string, type_name: string, description: string): Promise<any> {
+        try{  
         return await ServiceCategoryModel.findByIdAndUpdate(id, { type_name, description }, { new: true });
+      }catch(error){
+        throw new Error("Error occured Admin Login")
+      }
       }
     
       async deleteServiceCategory(id: string): Promise<any> {
+        try{  
         return await ServiceCategoryModel.findByIdAndDelete(id);
+      }catch(error){
+        throw new Error("Error occured Admin Login")
+      }
       }
 
-      // async getBookingDetails():Promise<BookingType | any> {
-        
-      //     const bookings = await BookingModel.find()
-      //       .populate({
-      //         path: 'user_id',
-      //         select: 'name email', // Selecting the needed fields from the User model
-      //       })
-      //       .populate({
-      //         path: 'service_id',
-      //         select: 'service_name price', // Selecting service name and price from the Service model
-      //       })
-      //       .exec();
-      //     return bookings;
-      //   }
 
       async getBookingDetails(skip: number, limit: number): Promise<[BookingType[], number]> {
+        try{  
         const bookings = await BookingModel.find()
           .populate({
             path: 'user_id',
@@ -120,13 +135,17 @@ export class AdminRepository implements IAdminRepository{
           .lean() // Converts Mongoose documents to plain JavaScript objects
           .exec();
         
-        const total = await BookingModel.countDocuments(); // Get the total count of documents
+        const total = await BookingModel.countDocuments(); 
 
   return [bookings as BookingType[], total];
+}catch(error){
+  throw new Error("Error occured Admin Login")
+}
       }
       
 
         async findBookingById(bookingId: string):Promise<BookingType | any>  {
+      
 
           const isValidObjectId = mongoose.Types.ObjectId.isValid(bookingId);
           if (!isValidObjectId) {
@@ -154,29 +173,42 @@ export class AdminRepository implements IAdminRepository{
 
 
         async getUserCount():Promise<UserType | any> {
+          try{  
           return await UserModel.countDocuments();
+        }catch(error){
+          throw new Error("Error occured Admin Login")
+        }
         };
 
         
 
         async getBookingCount():Promise<BookingType | any> {
+          try{  
           return await BookingModel.countDocuments();
+        }catch(error){
+          throw new Error("Error occured Admin Login")
+        }
         };
 
         
 
 
         async calculateTotalRevenue() :Promise<BookingType> {
+          try{  
           const revenue = await BookingModel.aggregate([
             // { $match: { status: 'completed' } },
             { $group: { _id: null, total: { $sum: '$amount' } } },
           ]);
           return revenue[0]?.total || 0;
+        }catch(error){
+          throw new Error("Error occured Admin Login")
+        }
         };
 
        
 
         async getRevenueOverTime(filter: string): Promise<BookingType | any> {
+          try{  
           let groupByStage: any = {};
           let projectTimePeriod: any = {};
         
@@ -236,48 +268,71 @@ export class AdminRepository implements IAdminRepository{
             { $project: projectTimePeriod },
             { $sort: { "_id": 1 } }, // Sort by time period
           ]);
+        }catch(error){
+          throw new Error("Error occured Admin Login")
+        }
         }
         
 
 
         async getBookingStatusDistribution():Promise<BookingType | any> {
+          try{  
           return await BookingModel.aggregate([
             { $group: { _id: '$status', count: { $sum: 1 } } },
           ]);
+        }catch(error){
+          throw new Error("Error occured Admin Login")
+        }
         };
         
 
         async createBanner(data:BannerType): Promise<BannerType | any> {
+          try{  
           return await BannerModel.create(data);
+        }catch(error){
+          throw new Error("Error occured Admin Login")
+        }
         }
       
         async getBanners(skip: number, limit: number): Promise<[BannerType[], number]> {
+          try{  
           const banners = await BannerModel.find()
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit)
             .exec();
         
-          const total = await BannerModel.countDocuments(); // Total number of banners
+          const total = await BannerModel.countDocuments(); 
           return [banners as unknown as BannerType[], total];
+        }catch(error){
+          throw new Error("Error occured Admin Login")
+        }
         }
         
 
         async getBannerById(BannerId:string) : Promise <BannerType | any> {
+          try{  
           return await BannerModel.findById(BannerId)
+        }catch(error){
+          throw new Error("Error occured Admin Login")
+        }
         }
 
       
         async updateBanner(BannerId: string, data: BannerType): Promise<BannerType | null> {
+          try{  
           return await BannerModel.findByIdAndUpdate(BannerId, data, { new: true });
+        }catch(error){
+          throw new Error("Error occured Admin Login")
+        }
         }
       
         async deleteBanner(BannerId: string): Promise<BannerType | null> {
+          try{  
           return await BannerModel.findByIdAndDelete(BannerId);
+        }catch(error){
+          throw new Error("Error occured Admin Login")
         }
-
-
-
-      
+        }
 
       }

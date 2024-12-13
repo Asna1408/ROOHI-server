@@ -6,15 +6,15 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import { initializeSocket } from "../services/WebSocket/socket";
 import { Server as SocketIoServer } from 'socket.io';
+import logger from "../../entities/utils/logger";
+import morgan from "morgan";
 
 
 export class ExpressServer {
     private app: Application;
-  
-  
     private server: HTTPServer;
     private io: SocketIoServer;
-
+    private morganFormat: string = ":method :url :status :response-time ms";
 
     constructor() {
         this.app = express();
@@ -32,7 +32,21 @@ export class ExpressServer {
         this.app.use(express.json());
         this.app.use(bodyParser.json());
         this.app.use(cookieParser());
-        // Log all incoming requests to the console
+        this.app.use(
+            morgan(this.morganFormat, {
+              stream: {
+                write: (message) => {
+                  const logObject = {
+                    method: message.split(" ")[0],
+                    url: message.split(" ")[1],
+                    status: message.split(" ")[2],
+                    responseTime: message.split(" ")[3],
+                  };
+                  logger.info(JSON.stringify(logObject));
+                },
+              },
+            })
+          );
         
     }
     

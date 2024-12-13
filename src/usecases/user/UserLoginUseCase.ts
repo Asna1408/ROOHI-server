@@ -9,6 +9,8 @@ export class UserLoginUseCase implements IUserLoginUseCase {
    constructor(private iuserrepository: IUserRepository) { }
 
    async UserLogin(email: string, password: string): Promise<UserType | string> {
+      
+      try {
       const data = await this.iuserrepository.FindByEmail(email);
       //  console.log(data)
       if (data) {
@@ -29,6 +31,10 @@ export class UserLoginUseCase implements IUserLoginUseCase {
          }
       } else {
          return "Invalid credential"
+      }
+   } catch (error) {
+         console.error("Error during login:", error);
+         return "An error occurred during login. Please try again later.";
       }
    }
 }

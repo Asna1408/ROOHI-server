@@ -41,6 +41,8 @@ import { CreateMessageUsecase } from "../../../usecases/user/CreateMessageUsecas
 import { GetMessageByIdUseCase } from "../../../usecases/user/GetMessageByIdUsecase";
 import { FetchingReviewDateUsecase } from "../../../usecases/user/FetchingReviewDateUsecase";
 import { GetBannerInUserUsecase } from "../../../usecases/user/GetBannerInUserUsecase";
+import { UserProfileEditUsecase } from "../../../usecases/user/UserProfileEditUsecase";
+import { UserProfileController } from "../../../interface adapter/controllers/user/UserProfileController";
 
 const stripeKey = "sk_test_51Q7VPGGWw2JRPJ2CWnRQe4HqZgOx1J2UqVdGqoSiMZq0QmwtS7vwIESa7lFbAaRxanFMV8zM4oBj4EmsVwh101oC00gl3FNpnb";
 
@@ -74,6 +76,10 @@ export const InjectedUserVerifyOtpController = new UserVerifyOtpController(UserV
 //resend otp verification
 const UserResendOtpUse = new UserResendOtpUseCase(monoRepository);
 export const InjectedUserResendOtpController = new ResendOtpController(UserResendOtpUse);
+
+//edit Profile
+const UserProfileUse = new UserProfileEditUsecase(monoRepository)
+export const InjectedEditProfileController = new UserProfileController(UserProfileUse)
 
 //forget password
 const UserForgetPassUse = new UserForgetPassUseCase(monoRepository);

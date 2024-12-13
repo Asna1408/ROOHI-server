@@ -29,21 +29,36 @@ export class UserRepository implements IUserRepository{
     };
   }
     async RegisterUser(user: UserType): Promise<any> {
+      try{
         return await UserModel.create(user);
+      }catch(error){
+        throw new Error("error occured when creating a user")
+      }
     }
 
-   async  FindByEmail(email: string): Promise<UserType | null> {
+   async FindByEmail(email: string): Promise<UserType | null> {
+    try{
          return await UserModel.findOne({email: email});
+    }catch(error){
+      throw new Error("error occured when finding the user")
+    }
+
     }
 
     async GoogleOAuth(user: UserType): Promise<any> {
+      try{
         const newUser = await UserModel.create(user);   
         return newUser;
+      }catch(error){
+        throw new Error("error occured when creating the user through google")
+      }
       }
 
  
     //for unverified user
     async FindByEmailAndDelete(email: string): Promise<boolean> {
+
+      try{
         const deleted = await UserModel.findOneAndDelete({ email: email });
           
 
@@ -52,6 +67,9 @@ export class UserRepository implements IUserRepository{
         } else {
           return false;
         }
+      }catch(error){
+        throw new Error("error occured when deleting the unverified user")
+      }
       }
          
 
@@ -77,7 +95,7 @@ export class UserRepository implements IUserRepository{
         const updatedUser = await UserModel.findOneAndUpdate(
           { email },
           { $set: { verified: status } },
-          { new: true } // Return the updated document
+          { new: true } 
         );
         return updatedUser;
       } catch (error) {
@@ -87,10 +105,16 @@ export class UserRepository implements IUserRepository{
     }
 
     async UpdateUser(email: string, updateData: any): Promise<any> {
+
+      try{
       return await UserModel.updateOne({ email }, { $set: updateData });
+      }catch(error){
+        throw new Error("Error occured when updating the user data")
+      }
     }
 
     async UpdatePassword(email:string,password:string):Promise<any>{
+      try{
        const updated = await UserModel.findOneAndUpdate({email},{
         $set:{
           password:password
@@ -102,15 +126,38 @@ export class UserRepository implements IUserRepository{
       }else{
         return false;
       }
+    }catch(error){
+      throw new Error("Error Occured when updating the banner")
+    }
     }
 
-    async EditProfile(updateData: any, _id: string): Promise<any> {
-      return await UserModel.findByIdAndUpdate(_id, { $set: updateData }, { new: true });
-    }
     
 
-    async getActiveBanners():Promise<BannerType | any> {
-      return await BannerModel.find({ isActive: true }); // Fetch only active banners
+  async getUserById(userId: string): Promise<UserType | any> {
+      try {
+          const user = await UserModel.findById(userId).select("-password -__v");;
+          return user 
+      } catch (error) {
+          throw new Error(`Error fetching user: ${error}`);
+      }
+  }
+    
+  async updateProfile(userId: string, updateData: Partial<UserType>): Promise<UserType | any> {
+    try {
+        const updatedUser = await UserModel.findByIdAndUpdate(userId, updateData, { new: true });
+        return updatedUser 
+    } catch (error) {
+        throw new Error(`Error updating profile: ${error}`);
     }
+}
+
+    async getActiveBanners():Promise<BannerType | any> {
+      try{
+      return await BannerModel.find({ isActive: true }); 
+    }catch(error){
+      throw new Error("error occured when finding the banners")
+    }
+
+  }
 
 }

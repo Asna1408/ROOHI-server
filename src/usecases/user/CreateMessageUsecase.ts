@@ -7,6 +7,10 @@ export class CreateMessageUsecase implements CreateMessageUsecaseInterface{
   constructor(private ichatRepository : IChatRepository){}
 
   async sendMessage(messageData: MessageType): Promise<MessageType> {
+   try{
     return await this.ichatRepository .createMessage(messageData);
+  }catch(error){
+    throw new Error("Error occured when sending the message")
+  }
   }
 }

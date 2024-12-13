@@ -17,7 +17,8 @@ export interface IUserRepository{
     UpdateVerifiedStatus(email: string, status: boolean): Promise<any>;
     UpdateUser(email: string, updateData: any): Promise<any>;  
     UpdatePassword(userId:string,hashedPassword:string):Promise<any>;
-    EditProfile(updateData:any,_id:string):Promise<any>
+    getUserById(userId: string): Promise<UserType | any>
+    updateProfile(userId: string, updateData: Partial<UserType>): Promise<UserType | any>
     // saveResetToken(userId: string, token: string, expiration: Date): Promise<void>;
     getActiveBanners():Promise<BannerType | any> 
 }

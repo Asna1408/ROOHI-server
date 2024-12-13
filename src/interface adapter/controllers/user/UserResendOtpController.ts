@@ -9,7 +9,6 @@ export class ResendOtpController {
     const { email } = req.body;
     console.log("Email received in request:", email);
 
-    // Validate if email is provided
     if (!email) {
       return res.status(400).json({ success: false, message: "Email is required." });
     }

@@ -7,6 +7,10 @@ export class GetConversationByUserIdUseCase implements GetConversationByUserIdUs
     constructor(private ichatrepository : IChatRepository ){}
 
   async getUserConversations(userId: string): Promise<ConversationType[]> {
+   try{
     return await this.ichatrepository .findConversationsByUserId(userId);
+   }catch(error){
+    throw new Error("Error occured when fetching the conversation")
+   }
   }
 }

@@ -1,6 +1,6 @@
 import { NextFunction, Router } from 'express'
 export{ Router} from 'express'
-import { InjectedPostController, InjectedGoogleAuthController, InjectedUserForgetPassController, InjectedUserLoginController, InjectedUserRegisterController, InjectedUserResendOtpController, InjectedUserVerifyOtpController, InjectedBookingController, InjectedReviewController, InjectedChatController } from '../../injection/user/UserInjects';
+import { InjectedPostController, InjectedGoogleAuthController, InjectedUserForgetPassController, InjectedUserLoginController, InjectedUserRegisterController, InjectedUserResendOtpController, InjectedUserVerifyOtpController, InjectedBookingController, InjectedReviewController, InjectedChatController, InjectedEditProfileController } from '../../injection/user/UserInjects';
 import { JwtTokenAdapter } from '../../services/JWT/Tokenservice';
 import { Req, Res } from '../../Types/servertype';
 import { ServiceModel } from '../../database/models/user/ServicesModel';
@@ -14,6 +14,7 @@ import ConversationModel from '../../database/models/user/ConversationModel';
 const router = Router();
 const JWToken = new JwtTokenAdapter();
 
+router.post('/refresh-token', JWToken.refreshToken.bind(JWToken));
 
 //authentication
 router.post("/signup",InjectedUserRegisterController.UserRegisterControl.bind(InjectedUserRegisterController))
@@ -24,6 +25,7 @@ router.post('/googleAuth',JWToken.createJwtToken,InjectedGoogleAuthController.Go
 router.get('/logout', async(req: Req, res: Res)=> {
     try {
       res.clearCookie("access_token");
+      res.clearCookie("refresh_token");
       res.status(200).json({ message: "success" });
     } catch (error) {
       console.error(error);
@@ -36,6 +38,12 @@ router.get('/logout', async(req: Req, res: Res)=> {
 router.post('/forgot-password',InjectedUserForgetPassController.RequestResetPassword.bind(InjectedUserForgetPassController))
 router.post('/reset-password',InjectedUserForgetPassController.resetPassword.bind(InjectedUserForgetPassController))
 
+
+//EditProfile
+router.get('/editProfile/:userId',JWToken.verifyToken,InjectedEditProfileController.getUserById.bind(InjectedEditProfileController))
+router.post('/editProfile/:userId',JWToken.verifyToken,InjectedEditProfileController.editProfile.bind(InjectedEditProfileController))
+
+
 //post section
 router.post('/uploadpost',JWToken.verifyToken,InjectedPostController.createService.bind(InjectedPostController))
 router.get("/getallpost/:providerId",JWToken.verifyToken,InjectedPostController.GetAllPost.bind(InjectedPostController))
@@ -44,6 +52,7 @@ router.put('/editpost/:postId',JWToken.verifyToken, InjectedPostController.editP
 router.delete('/deletepost/:postId',JWToken.verifyToken, InjectedPostController.deletePost.bind(InjectedPostController));
 router.get('/getallpost',InjectedPostController.getAllServices.bind(InjectedPostController));
 router.get('/servicedetails/:id',InjectedPostController.getsingleService.bind((InjectedPostController)));
+
 
 //booking section
 router.get('/services/:serviceId/availability',JWToken.verifyToken,InjectedPostController.getAvailability.bind(InjectedPostController));
@@ -56,15 +65,19 @@ router.get('/bookdetailsbyid/:bookingId',JWToken.verifyToken,InjectedBookingCont
 router.get('/bookdetails/bookings/:providerId',JWToken.verifyToken,InjectedBookingController.getProviderBookingsController.bind(InjectedBookingController))
 router.get('/booking/:userId/:serviceId/status',InjectedBookingController.getBookingStatus.bind(InjectedBookingController))
 
+
 //review section
 router.post('/review/addReview' ,InjectedReviewController.createReview.bind(InjectedReviewController));
 router.get('/service/:serviceId/reviews',InjectedReviewController.getReviewsByService.bind(InjectedReviewController));
+
 
 //chat section
 router.post('/create-conversation',JWToken.verifyToken,InjectedChatController.createConversation.bind(InjectedChatController))
 router.get('/get-user-conversations/:userId',JWToken.verifyToken,InjectedChatController.getUserConversations.bind(InjectedChatController))
 router.post('/send-message',JWToken.verifyToken,InjectedChatController.sendMessage.bind(InjectedChatController))
 router.get('/get-messages/:conversationId',JWToken.verifyToken,InjectedChatController.getMessages.bind(InjectedChatController))
+// router.get('/get-messages/:conversationId',InjectedChatController.getMessages.bind(InjectedChatController))
+
 
 router.get('/home-banners', InjectedUserLoginController.getHomePageBanners.bind(InjectedUserLoginController));
 

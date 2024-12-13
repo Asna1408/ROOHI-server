@@ -5,6 +5,8 @@ export class UserVerifyOtpUseCase implements IUserVerifyOtpUseCase{
    constructor(private iuserrepository: IUserRepository){};
 
    async VerifyOtp(email: string, otp: string): Promise<boolean> {
+     
+      try{
       const data: any = await this.iuserrepository.FindByEmail(email);
       
     if(data){
@@ -19,6 +21,10 @@ export class UserVerifyOtpUseCase implements IUserVerifyOtpUseCase{
     }else{
         return false
     }
-   }
+   }catch (error) {
+      console.error("Error verifying OTP:", error);
+      return false; 
+    }
+}
 
 }

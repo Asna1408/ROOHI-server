@@ -18,51 +18,28 @@ export class UserPostController {
         private usereditpostusecaseinterface:UserEditPostUsecaseInterface,
         private userfetchallpostusecaseinterface:UserGetAllPostInShopUseCaseInterface,
         private usergetsingleserviceinterface:UserGetSingleServiceUseCaseInterface,
-      private getserviceavailabilityusecaseInterfcae:GetServiceAvailabiltyUsecaseInterface,
+        private getserviceavailabilityusecaseInterfcae:GetServiceAvailabiltyUsecaseInterface,
     ) {}
 
     async createService(req: Req, res: Res): Promise<any> {
         try {
-            // Log request body for debugging
             console.log("Request body:", req.body);
 
-            // Extract data from request body
             const { service_name, description, price, provider_id, service_type, availability } = req.body;
 
-            // Validate required fields
             if (!service_name || !description || !price || !provider_id || !service_type || !availability) {
-                return res.status(400).json({ message: "Missing required fields" }); // Return to avoid further execution
+                return res.status(400).json({ message: "Missing required fields" }); 
             }
 
             const serviceData = req.body;
-
-            // Call use case to create service
             const newService = await this.iuserpostaddusecase.createService(serviceData);
-            return res.status(201).json({ message: "Service created successfully", service: newService }); // Return after sending response
+            return res.status(201).json({ message: "Service created successfully", service: newService }); 
         } catch (error) {
             console.error("Error adding service:", error);
-            return res.status(500).json({ message: "Internal server error", error: error }); // Return after sending response
+            return res.status(500).json({ message: "Internal server error", error: error }); 
         }
     }
 
-
-    // async GetAllPost(req: Req, res: Res) {
-    //     try {
-    //       console.log("Full URL:", req.originalUrl); // Log the full URL
-    //       console.log("Provider ID from Params:", req.params.providerId); // Log the provider ID from the request
-      
-    //       const providerId = new mongoose.Types.ObjectId(req.params.providerId);
-    //       console.log("Converted Provider ID:", providerId); // Ensure correct conversion
-      
-    //       const services = await this.usergetpostusecaseinterface.GetAllPost(providerId);
-    //       console.log("Fetched Services:", services); // Log fetched services
-      
-    //       res.status(200).json(services);
-    //     } catch (error) {
-    //       console.error("Error fetching services:", error);
-    //       res.status(500).json({ message: error });
-    //     }
-    //   }
 
     async GetAllPost(req: Req, res: Res) {
       try {
@@ -114,7 +91,6 @@ export class UserPostController {
             const postId = new mongoose.Types.ObjectId(req.params.postId); 
             const updatedData = req.body; 
 
-            // Call use case to update the post
             const updatedPost = await this.usereditpostusecaseinterface.updatePost(postId, updatedData);
             
             if (!updatedPost) {
@@ -131,9 +107,8 @@ export class UserPostController {
    
     async deletePost(req: Req, res: Res): Promise<any> {
         try {
-            const postId = new mongoose.Types.ObjectId(req.params.postId); // Get the post ID from params
+            const postId = new mongoose.Types.ObjectId(req.params.postId); 
 
-            // Call use case to delete the post
             const deletedPost = await this.userdeletepostusercaseinterface.deletePost(postId);
             
             if (!deletedPost) {
@@ -159,7 +134,7 @@ export class UserPostController {
 
     //get single service
     async getsingleService(req: Req, res: Res) {
-      const serviceId = new mongoose.Types.ObjectId(req.params.id); // Assuming the ID comes from the URL
+      const serviceId = new mongoose.Types.ObjectId(req.params.id); 
 
       try {
           const service = await this.usergetsingleserviceinterface.getsingleservice(serviceId);

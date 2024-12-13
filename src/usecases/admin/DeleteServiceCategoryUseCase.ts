@@ -7,6 +7,10 @@ export class DeleteServiceCategoryUseCase implements IDeleteServiceCategoryUseCa
     constructor(private iadminrepository: IAdminRepository) {}
   
     async deleteServiceCategory(id: string): Promise<any> {
+      try{
       return this.iadminrepository.deleteServiceCategory(id);
+    }catch(error){
+      throw new Error("Error occured when deleting category")
+         }
     }
   }

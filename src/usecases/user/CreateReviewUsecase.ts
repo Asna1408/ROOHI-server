@@ -18,10 +18,12 @@ export class CreateReviewUsecase implements CreateReviewUsecaseInterface{
         review: string
       ):Promise<ReviewType> {
 
+
         if (!mongoose.isValidObjectId(userId) || !mongoose.isValidObjectId(serviceId)) {
           throw new Error("Invalid userId or serviceId provided");
       }
 
+      try{
       const booking = await this.ibookingrepository.getBookingByUserAndService(userId, serviceId);
       if (!booking) {
           throw new Error("No booking found for this user and service");
@@ -36,6 +38,10 @@ export class CreateReviewUsecase implements CreateReviewUsecaseInterface{
         
       // }
         return this.ireviewrepository.createReview(userId, serviceId,rating, review);
+      
+    }catch(error){
+      throw new Error("Error occured when creating review")
+    }
       }
     
 }

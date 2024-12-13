@@ -6,7 +6,11 @@ export class UserGetPostByIdUsecase implements UserGetPostByIdUseCaseInterface{
   
 
 async getPostById(postId: string): Promise<any> {
-    return await this.ipostrepository.getPostById(postId);
-  }
-
+  try { 
+  return await this.ipostrepository.getPostById(postId);
+  }catch (error) {
+    console.error("Error fetching post by ID:", error);
+    throw new Error("An error occurred while fetching the post. Please try again later.");
+ }
+}
 }

@@ -1,8 +1,7 @@
 import React from 'react'
 import { IUserForgetPassUsecase } from '../../../entities/useCaseInterfaces/user/IUserForgetPassUsecase';
 import { Req, Res } from '../../../frameworks/Types/servertype';
-// import { SendEmailOtp } from '../../../frameworks/services/nodemailer/nodemailer';
-// import { sendResetPasswordEmail } from '../../../frameworks/services/nodemailer/nodemailer';
+
 
 export class UserForgetPassController {
 
@@ -39,7 +38,6 @@ export class UserForgetPassController {
           res.status(400).json({ message: 'Error resetting password' });
         }
       }catch (error) {
-        // Handle unexpected errors
         console.error('Error resetting password:', error);
         res.status(500).json({ message: 'Internal Server Error' });
     }

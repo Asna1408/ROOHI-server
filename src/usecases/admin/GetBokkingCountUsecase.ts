@@ -6,7 +6,11 @@ export class GetBookingCountUsecase implements GetBookingCountUsecaseInterface{
      constructor(private iadminrepository:IAdminRepository){}
 
 async getBookingCount() :Promise<BookingType>{
+  try{
     return await this.iadminrepository.getBookingCount();
+  }catch(error){
+    throw new Error("error on getting booking count")
+  }
   };
 
 }
