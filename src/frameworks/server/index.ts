@@ -8,6 +8,7 @@ import { initializeSocket } from "../services/WebSocket/socket";
 import { Server as SocketIoServer } from 'socket.io';
 import logger from "../../entities/utils/logger";
 import morgan from "morgan";
+import cors from "cors";
 
 
 export class ExpressServer {
@@ -32,6 +33,10 @@ export class ExpressServer {
         this.app.use(express.json());
         this.app.use(bodyParser.json());
         this.app.use(cookieParser());
+        this.app.use(cors({
+            origin: "http://localhost:5173", // Frontend URL
+            credentials: true, // Allow cookies and credentials
+          }));
         this.app.use(
             morgan(this.morganFormat, {
               stream: {

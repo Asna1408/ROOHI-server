@@ -8,7 +8,8 @@ import { JwtTokenAdapter } from '../../services/JWT/Tokenservice';
 
 const AdminRoute = Router();
 const JWToken = new JwtTokenAdapter();
-  
+AdminRoute.post('/refresh-token', JWToken.refreshToken.bind(JWToken));
+
 AdminRoute.post("/admin_login",JWToken.createJwtToken,InjectedAdminLoginController.AdminLoginControl.bind(InjectedAdminLoginController))
 AdminRoute.get('/logout', async(req: Req, res: Res)=> {
     try {
