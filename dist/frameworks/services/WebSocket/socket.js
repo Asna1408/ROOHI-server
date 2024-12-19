@@ -8,6 +8,7 @@ function initializeSocket(server) {
     const io = new socket_io_1.Server(server, {
         cors: {
             origin: ["https://perfect-bride.vercel.app"],
+            // origin: "*",
             methods: ["GET", "POST"],
             allowedHeaders: ["Authorization", "Content-Type"],
             credentials: true,

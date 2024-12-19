@@ -157,3 +157,12 @@
 {"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"GET\",\"url\":\"/user/home-banners\",\"status\":\"304\",\"responseTime\":\"44.978\"}","timestamp":"2024-12-19T07:21:51.427Z"}
 {"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"GET\",\"url\":\"/user/logout\",\"status\":\"304\",\"responseTime\":\"3.275\"}","timestamp":"2024-12-19T07:23:18.886Z"}
 {"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/user/forgot-password\",\"status\":\"200\",\"responseTime\":\"14141.540\"}","timestamp":"2024-12-19T07:23:54.719Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"GET\",\"url\":\"/user/getallpost\",\"status\":\"200\",\"responseTime\":\"172.916\"}","timestamp":"2024-12-19T14:09:02.265Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"GET\",\"url\":\"/user/getallpost\",\"status\":\"304\",\"responseTime\":\"94.411\"}","timestamp":"2024-12-19T14:09:02.364Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"GET\",\"url\":\"/user/getallpost\",\"status\":\"304\",\"responseTime\":\"118.638\"}","timestamp":"2024-12-19T14:09:23.236Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"GET\",\"url\":\"/user/getallpost\",\"status\":\"304\",\"responseTime\":\"95.233\"}","timestamp":"2024-12-19T14:09:23.336Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"GET\",\"url\":\"/user/home-banners\",\"status\":\"304\",\"responseTime\":\"59.475\"}","timestamp":"2024-12-19T14:09:28.471Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"GET\",\"url\":\"/user/home-banners\",\"status\":\"304\",\"responseTime\":\"47.256\"}","timestamp":"2024-12-19T14:09:28.533Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"POST\",\"url\":\"/user/login\",\"status\":\"200\",\"responseTime\":\"78.744\"}","timestamp":"2024-12-19T14:15:06.214Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"GET\",\"url\":\"/user/home-banners\",\"status\":\"304\",\"responseTime\":\"69.853\"}","timestamp":"2024-12-19T14:15:49.540Z"}
+{"level":"\u001b[32minfo\u001b[39m","message":"{\"method\":\"GET\",\"url\":\"/user/home-banners\",\"status\":\"304\",\"responseTime\":\"50.102\"}","timestamp":"2024-12-19T14:15:49.597Z"}
