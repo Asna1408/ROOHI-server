@@ -40,7 +40,7 @@ export class ExpressServer {
             // origin: "http://localhost:5173", 
             credentials: true, 
           }));
-          this.app.use('*',cors({
+          this.app.options('*',cors({
             origin: "https://perfect-bride.vercel.app", 
             methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
             allowedHeaders: ["Authorization", "Content-Type"],
