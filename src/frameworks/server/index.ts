@@ -33,20 +33,14 @@ export class ExpressServer {
         this.app.use(express.json());
         this.app.use(bodyParser.json());
         this.app.use(cookieParser());
-        this.app.use(cors({
-            origin: "https://perfect-bride.vercel.app", 
+        const corsOptions = {
+            origin: ["https://perfect-bride.vercel.app"],
             methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
             allowedHeaders: ["Authorization", "Content-Type"],
-            // origin: "http://localhost:5173", 
-            credentials: true, 
-          }));
-          this.app.options('*',cors({
-            origin: "https://perfect-bride.vercel.app", 
-            methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-            allowedHeaders: ["Authorization", "Content-Type"],
-            // origin: "http://localhost:5173", 
-            credentials: true, 
-          }));
+            credentials: true,
+          };
+        this.app.use(cors(corsOptions));
+          this.app.options('*',cors(corsOptions));
         this.app.use(
             morgan(this.morganFormat, {
               stream: {
