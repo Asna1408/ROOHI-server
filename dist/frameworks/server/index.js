@@ -30,7 +30,7 @@ class ExpressServer {
         this.app.use(body_parser_1.default.json());
         this.app.use((0, cookie_parser_1.default)());
         const corsOptions = {
-            origin: ["https://perfect-bride.vercel.app"],
+            origin: ['https://perfect-bride.vercel.app'],
             methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
             allowedHeaders: ["Authorization", "Content-Type"],
             credentials: true,

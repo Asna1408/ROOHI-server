@@ -34,13 +34,14 @@ export class ExpressServer {
         this.app.use(bodyParser.json());
         this.app.use(cookieParser());
         const corsOptions = {
-            origin: ["https://perfect-bride.vercel.app"],
+            origin: ['https://perfect-bride.vercel.app'],
             methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
             allowedHeaders: ["Authorization", "Content-Type"],
             credentials: true,
           };
         this.app.use(cors(corsOptions));
-          this.app.options('*',cors(corsOptions));
+        this.app.options('*',cors(corsOptions));
+
         this.app.use(
             morgan(this.morganFormat, {
               stream: {

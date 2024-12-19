@@ -11,7 +11,7 @@ function initializeSocket(server: HTTPServer): SocketIoServer {
 
   const io = new SocketIoServer(server, {
     cors: {
-      origin: ["https://perfect-bride.vercel.app"],
+      origin: ['https://perfect-bride.vercel.app'],
       methods: ["GET", "POST"],
       allowedHeaders: ["Authorization", "Content-Type"],
       credentials: true,
