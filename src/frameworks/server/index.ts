@@ -34,7 +34,7 @@ export class ExpressServer {
         this.app.use(bodyParser.json());
         this.app.use(cookieParser());
         this.app.use(cors({
-            origin: "http://localhost:5173", // Frontend URL
+            origin: "https://perfect-bride.vercel.app", // Frontend URL
             credentials: true, // Allow cookies and credentials
           }));
         this.app.use(

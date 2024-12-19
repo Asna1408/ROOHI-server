@@ -8,15 +8,10 @@ const onlineUsers = new Map<string, string>(); // Map of userId to socketId
 function initializeSocket(server: HTTPServer): SocketIoServer {
   console.log("Initializing socket");
 
-//   const allowedOrigins: any = [
-//     "https://elitemediator.shop",
-//     "https://www.elitemediator.shop"
-//   ];
-  
 
   const io = new SocketIoServer(server, {
     cors: {
-      origin: "*",
+      origin: ["https://perfect-bride.vercel.app"],
       methods: ["GET", "POST"],
       allowedHeaders: ["Authorization", "Content-Type"],
       credentials: true,

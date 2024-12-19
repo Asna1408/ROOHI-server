@@ -9,7 +9,7 @@ export class AddServiceCategoryUseCase implements IAddServiceCategoryUseCase {
     try{
     return this.iadminrepository.addServiceCategory(type_name, description);
     }catch(error){
-      throw new Error("Error occcured add category")
+      throw new Error("Error occcured during the add service category")
     }
   }
 }
