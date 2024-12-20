@@ -24,6 +24,7 @@ class GetAllUserController {
                 const limit = parseInt(req.query.limit) || 10;
                 const skip = (page - 1) * limit;
                 const { users, total } = yield this.getalluserusecase.GetAllUsers(skip, limit);
+                console.log(users, "users controller");
                 res.status(200).json({ users, total, currentPage: page, totalPages: Math.ceil(total / limit) });
             }
             catch (error) {

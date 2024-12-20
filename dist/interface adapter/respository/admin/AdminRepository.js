@@ -41,7 +41,7 @@ class AdminRepository {
                     .limit(limit)
                     .lean()
                     .exec();
-                console.log(users, "users");
+                console.log(users, "users repository");
                 const total = yield userModel_1.UserModel.countDocuments();
                 return [users, total];
             }

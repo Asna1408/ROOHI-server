@@ -17,7 +17,7 @@ async GetAllUserControl(req: Req, res: Res): Promise<void> {
     const skip = (page - 1) * limit;
 
     const { users, total } = await this.getalluserusecase.GetAllUsers(skip, limit);
-
+    console.log(users,"users controller")
     res.status(200).json({ users, total, currentPage: page, totalPages: Math.ceil(total / limit) });
   } catch (error) {
     console.error(error);
