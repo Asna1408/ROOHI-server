@@ -31,31 +31,31 @@ AdminRoute.get('/logout', (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
 }));
 //user section
-AdminRoute.get("/UserList", JWToken.verifyToken, AdminInjects_1.InjectedGetAllUserController.GetAllUserControl.bind(AdminInjects_1.InjectedGetAllUserController));
-AdminRoute.post("/block/:id", JWToken.verifyToken, AdminInjects_1.InjectedGetAllUserController.BlockUserControl.bind(AdminInjects_1.InjectedGetAllUserController));
-AdminRoute.post("/Unblock/:id", JWToken.verifyToken, AdminInjects_1.InjectedGetAllUserController.UnblockUserControl.bind(AdminInjects_1.InjectedGetAllUserController));
+AdminRoute.get("/UserList", AdminInjects_1.InjectedGetAllUserController.GetAllUserControl.bind(AdminInjects_1.InjectedGetAllUserController));
+AdminRoute.post("/block/:id", AdminInjects_1.InjectedGetAllUserController.BlockUserControl.bind(AdminInjects_1.InjectedGetAllUserController));
+AdminRoute.post("/Unblock/:id", AdminInjects_1.InjectedGetAllUserController.UnblockUserControl.bind(AdminInjects_1.InjectedGetAllUserController));
 //service type section
-AdminRoute.get("/ServiceList", JWToken.verifyToken, AdminInjects_1.InjectedGetAllServiceCategoryController.getServiceCategories.bind(AdminInjects_1.InjectedGetAllServiceCategoryController));
-AdminRoute.get("/service-category/:id", JWToken.verifyToken, AdminInjects_1.InjectedGetAllServiceCategoryController.getServiceCategoryById.bind(AdminInjects_1.InjectedGetAllServiceCategoryController));
-AdminRoute.post("/AddServiceCategory", JWToken.verifyToken, AdminInjects_1.InjectedGetAllServiceCategoryController.addServiceCategory.bind(AdminInjects_1.InjectedGetAllServiceCategoryController));
-AdminRoute.put('/EditService-category/:id', JWToken.verifyToken, AdminInjects_1.InjectedGetAllServiceCategoryController.editServiceCategory.bind(AdminInjects_1.InjectedGetAllServiceCategoryController));
-AdminRoute.delete('/DeleteService-category/:id', JWToken.verifyToken, AdminInjects_1.InjectedGetAllServiceCategoryController.deleteServiceCategory.bind(AdminInjects_1.InjectedGetAllServiceCategoryController));
+AdminRoute.get("/ServiceList", AdminInjects_1.InjectedGetAllServiceCategoryController.getServiceCategories.bind(AdminInjects_1.InjectedGetAllServiceCategoryController));
+AdminRoute.get("/service-category/:id", AdminInjects_1.InjectedGetAllServiceCategoryController.getServiceCategoryById.bind(AdminInjects_1.InjectedGetAllServiceCategoryController));
+AdminRoute.post("/AddServiceCategory", AdminInjects_1.InjectedGetAllServiceCategoryController.addServiceCategory.bind(AdminInjects_1.InjectedGetAllServiceCategoryController));
+AdminRoute.put('/EditService-category/:id', AdminInjects_1.InjectedGetAllServiceCategoryController.editServiceCategory.bind(AdminInjects_1.InjectedGetAllServiceCategoryController));
+AdminRoute.delete('/DeleteService-category/:id', AdminInjects_1.InjectedGetAllServiceCategoryController.deleteServiceCategory.bind(AdminInjects_1.InjectedGetAllServiceCategoryController));
 //Booking section
-AdminRoute.get('/bookdetails', JWToken.verifyToken, AdminInjects_1.InjectedGetBookingsUse.getAllBookingDetails.bind(AdminInjects_1.InjectedGetBookingsUse));
-AdminRoute.get('/Bookdetails/:bookingId', JWToken.verifyToken, AdminInjects_1.InjectedGetBookingsUse.getBookingById.bind(AdminInjects_1.InjectedGetBookingsUse));
+AdminRoute.get('/bookdetails', AdminInjects_1.InjectedGetBookingsUse.getAllBookingDetails.bind(AdminInjects_1.InjectedGetBookingsUse));
+AdminRoute.get('/Bookdetails/:bookingId', AdminInjects_1.InjectedGetBookingsUse.getBookingById.bind(AdminInjects_1.InjectedGetBookingsUse));
 //dashboard section
-AdminRoute.get("/get-user-count", JWToken.verifyToken, AdminInjects_1.InjectedGetAllUserController.getUserCount.bind(AdminInjects_1.InjectedGetAllUserController));
-AdminRoute.get("/get-booking-count", JWToken.verifyToken, AdminInjects_1.InjectedGetBookingsUse.getBookingCount.bind(AdminInjects_1.InjectedGetBookingsUse));
+AdminRoute.get("/get-user-count", AdminInjects_1.InjectedGetAllUserController.getUserCount.bind(AdminInjects_1.InjectedGetAllUserController));
+AdminRoute.get("/get-booking-count", AdminInjects_1.InjectedGetBookingsUse.getBookingCount.bind(AdminInjects_1.InjectedGetBookingsUse));
 AdminRoute.get("/get-totalrevenue", AdminInjects_1.InjectedDashboardController.getRevenue.bind(AdminInjects_1.InjectedDashboardController));
 AdminRoute.get("/get-revenueOvertime", AdminInjects_1.InjectedDashboardController.getRevenueOvertime.bind(AdminInjects_1.InjectedDashboardController));
 AdminRoute.get("/get-bookingstatus", AdminInjects_1.InjectedDashboardController.getbookingStatusDistribution.bind(AdminInjects_1.InjectedDashboardController));
 //banner section
-AdminRoute.post('/banner/addBanner', JWToken.verifyToken, AdminInjects_1.InjectedBannerUse.createBanner.bind(AdminInjects_1.InjectedBannerUse));
-AdminRoute.get('/banner', JWToken.verifyToken, AdminInjects_1.InjectedBannerUse.GetAllBanner.bind(AdminInjects_1.InjectedBannerUse));
-AdminRoute.get('/banner/:BannerId', JWToken.verifyToken, AdminInjects_1.InjectedBannerUse.getBannerbyId.bind(AdminInjects_1.InjectedBannerUse));
-AdminRoute.post('/banner/updateBanner/:BannerId', JWToken.verifyToken, AdminInjects_1.InjectedBannerUse.editBanner.bind(AdminInjects_1.InjectedBannerUse));
-AdminRoute.delete('/banner/deleteBanner/:BannerId', JWToken.verifyToken, AdminInjects_1.InjectedBannerUse.deleteBanner.bind(AdminInjects_1.InjectedBannerUse));
+AdminRoute.post('/banner/addBanner', AdminInjects_1.InjectedBannerUse.createBanner.bind(AdminInjects_1.InjectedBannerUse));
+AdminRoute.get('/banner', AdminInjects_1.InjectedBannerUse.GetAllBanner.bind(AdminInjects_1.InjectedBannerUse));
+AdminRoute.get('/banner/:BannerId', AdminInjects_1.InjectedBannerUse.getBannerbyId.bind(AdminInjects_1.InjectedBannerUse));
+AdminRoute.post('/banner/updateBanner/:BannerId', AdminInjects_1.InjectedBannerUse.editBanner.bind(AdminInjects_1.InjectedBannerUse));
+AdminRoute.delete('/banner/deleteBanner/:BannerId', AdminInjects_1.InjectedBannerUse.deleteBanner.bind(AdminInjects_1.InjectedBannerUse));
 //payout section
-AdminRoute.post('/initiate-payout', JWToken.verifyToken, AdminInjects_1.InjectedPayoutController.initiatePayout.bind(AdminInjects_1.InjectedPayoutController));
-AdminRoute.get('/payouts/:status', JWToken.verifyToken, AdminInjects_1.InjectedPayoutController.getPayouts.bind(AdminInjects_1.InjectedPayoutController));
+AdminRoute.post('/initiate-payout', AdminInjects_1.InjectedPayoutController.initiatePayout.bind(AdminInjects_1.InjectedPayoutController));
+AdminRoute.get('/payouts/:status', AdminInjects_1.InjectedPayoutController.getPayouts.bind(AdminInjects_1.InjectedPayoutController));
 exports.default = AdminRoute;

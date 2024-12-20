@@ -39,34 +39,34 @@ router.get('/logout', (req, res) => __awaiter(void 0, void 0, void 0, function* 
 router.post('/forgot-password', UserInjects_1.InjectedUserForgetPassController.RequestResetPassword.bind(UserInjects_1.InjectedUserForgetPassController));
 router.post('/reset-password', UserInjects_1.InjectedUserForgetPassController.resetPassword.bind(UserInjects_1.InjectedUserForgetPassController));
 //EditProfile
-router.get('/editProfile/:userId', JWToken.verifyToken, UserInjects_1.InjectedEditProfileController.getUserById.bind(UserInjects_1.InjectedEditProfileController));
-router.post('/editProfile/:userId', JWToken.verifyToken, UserInjects_1.InjectedEditProfileController.editProfile.bind(UserInjects_1.InjectedEditProfileController));
+router.get('/editProfile/:userId', UserInjects_1.InjectedEditProfileController.getUserById.bind(UserInjects_1.InjectedEditProfileController));
+router.post('/editProfile/:userId', UserInjects_1.InjectedEditProfileController.editProfile.bind(UserInjects_1.InjectedEditProfileController));
 //post section
-router.post('/uploadpost', JWToken.verifyToken, UserInjects_1.InjectedPostController.createService.bind(UserInjects_1.InjectedPostController));
-router.get("/getallpost/:providerId", JWToken.verifyToken, UserInjects_1.InjectedPostController.GetAllPost.bind(UserInjects_1.InjectedPostController));
-router.get("/editpost/:postId", JWToken.verifyToken, UserInjects_1.InjectedPostController.getPost.bind(UserInjects_1.InjectedPostController));
-router.put('/editpost/:postId', JWToken.verifyToken, UserInjects_1.InjectedPostController.editPost.bind(UserInjects_1.InjectedPostController));
-router.delete('/deletepost/:postId', JWToken.verifyToken, UserInjects_1.InjectedPostController.deletePost.bind(UserInjects_1.InjectedPostController));
+router.post('/uploadpost', UserInjects_1.InjectedPostController.createService.bind(UserInjects_1.InjectedPostController));
+router.get("/getallpost/:providerId", UserInjects_1.InjectedPostController.GetAllPost.bind(UserInjects_1.InjectedPostController));
+router.get("/editpost/:postId", UserInjects_1.InjectedPostController.getPost.bind(UserInjects_1.InjectedPostController));
+router.put('/editpost/:postId', UserInjects_1.InjectedPostController.editPost.bind(UserInjects_1.InjectedPostController));
+router.delete('/deletepost/:postId', UserInjects_1.InjectedPostController.deletePost.bind(UserInjects_1.InjectedPostController));
 router.get('/getallpost', UserInjects_1.InjectedPostController.getAllServices.bind(UserInjects_1.InjectedPostController));
 router.get('/servicedetails/:id', UserInjects_1.InjectedPostController.getsingleService.bind((UserInjects_1.InjectedPostController)));
 //booking section
-router.get('/services/:serviceId/availability', JWToken.verifyToken, UserInjects_1.InjectedPostController.getAvailability.bind(UserInjects_1.InjectedPostController));
-router.post('/booknowcheckout', JWToken.verifyToken, UserInjects_1.InjectedBookingController.createCheckoutSession.bind(UserInjects_1.InjectedBookingController));
-router.get('/booking/success', JWToken.verifyToken, UserInjects_1.InjectedBookingController.verifyPaymentAndCreateBooking.bind(UserInjects_1.InjectedBookingController));
-router.post('/cancel/:bookingId', JWToken.verifyToken, UserInjects_1.InjectedBookingController.cancelBooking.bind(UserInjects_1.InjectedBookingController));
-router.post('/complete/:bookingId', JWToken.verifyToken, UserInjects_1.InjectedBookingController.completeBooking.bind(UserInjects_1.InjectedBookingController));
-router.get('/bookdetails/:userId/bookings', JWToken.verifyToken, UserInjects_1.InjectedBookingController.getbookByUserId.bind(UserInjects_1.InjectedBookingController));
-router.get('/bookdetailsbyid/:bookingId', JWToken.verifyToken, UserInjects_1.InjectedBookingController.getBookingDetailsById.bind(UserInjects_1.InjectedBookingController));
-router.get('/bookdetails/bookings/:providerId', JWToken.verifyToken, UserInjects_1.InjectedBookingController.getProviderBookingsController.bind(UserInjects_1.InjectedBookingController));
+router.get('/services/:serviceId/availability', UserInjects_1.InjectedPostController.getAvailability.bind(UserInjects_1.InjectedPostController));
+router.post('/booknowcheckout', UserInjects_1.InjectedBookingController.createCheckoutSession.bind(UserInjects_1.InjectedBookingController));
+router.get('/booking/success', UserInjects_1.InjectedBookingController.verifyPaymentAndCreateBooking.bind(UserInjects_1.InjectedBookingController));
+router.post('/cancel/:bookingId', UserInjects_1.InjectedBookingController.cancelBooking.bind(UserInjects_1.InjectedBookingController));
+router.post('/complete/:bookingId', UserInjects_1.InjectedBookingController.completeBooking.bind(UserInjects_1.InjectedBookingController));
+router.get('/bookdetails/:userId/bookings', UserInjects_1.InjectedBookingController.getbookByUserId.bind(UserInjects_1.InjectedBookingController));
+router.get('/bookdetailsbyid/:bookingId', UserInjects_1.InjectedBookingController.getBookingDetailsById.bind(UserInjects_1.InjectedBookingController));
+router.get('/bookdetails/bookings/:providerId', UserInjects_1.InjectedBookingController.getProviderBookingsController.bind(UserInjects_1.InjectedBookingController));
 router.get('/booking/:userId/:serviceId/status', UserInjects_1.InjectedBookingController.getBookingStatus.bind(UserInjects_1.InjectedBookingController));
 //review section
 router.post('/review/addReview', UserInjects_1.InjectedReviewController.createReview.bind(UserInjects_1.InjectedReviewController));
 router.get('/service/:serviceId/reviews', UserInjects_1.InjectedReviewController.getReviewsByService.bind(UserInjects_1.InjectedReviewController));
 //chat section
-router.post('/create-conversation', JWToken.verifyToken, UserInjects_1.InjectedChatController.createConversation.bind(UserInjects_1.InjectedChatController));
-router.get('/get-user-conversations/:userId', JWToken.verifyToken, UserInjects_1.InjectedChatController.getUserConversations.bind(UserInjects_1.InjectedChatController));
-router.post('/send-message', JWToken.verifyToken, UserInjects_1.InjectedChatController.sendMessage.bind(UserInjects_1.InjectedChatController));
-router.get('/get-messages/:conversationId', JWToken.verifyToken, UserInjects_1.InjectedChatController.getMessages.bind(UserInjects_1.InjectedChatController));
+router.post('/create-conversation', UserInjects_1.InjectedChatController.createConversation.bind(UserInjects_1.InjectedChatController));
+router.get('/get-user-conversations/:userId', UserInjects_1.InjectedChatController.getUserConversations.bind(UserInjects_1.InjectedChatController));
+router.post('/send-message', UserInjects_1.InjectedChatController.sendMessage.bind(UserInjects_1.InjectedChatController));
+router.get('/get-messages/:conversationId', UserInjects_1.InjectedChatController.getMessages.bind(UserInjects_1.InjectedChatController));
 // router.get('/get-messages/:conversationId',InjectedChatController.getMessages.bind(InjectedChatController))
 router.get('/home-banners', UserInjects_1.InjectedUserLoginController.getHomePageBanners.bind(UserInjects_1.InjectedUserLoginController));
 exports.default = router;

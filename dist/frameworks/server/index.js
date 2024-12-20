@@ -11,9 +11,6 @@ const AdminRoute_1 = __importDefault(require("../route/admin/AdminRoute"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const socket_1 = require("../services/WebSocket/socket");
-const logger_1 = __importDefault(require("../../entities/utils/logger"));
-const morgan_1 = __importDefault(require("morgan"));
-const cors_1 = __importDefault(require("cors"));
 class ExpressServer {
     constructor() {
         this.morganFormat = ":method :url :status :response-time ms";
@@ -29,27 +26,29 @@ class ExpressServer {
         this.app.use(express_1.default.json());
         this.app.use(body_parser_1.default.json());
         this.app.use((0, cookie_parser_1.default)());
-        const corsOptions = {
-            origin: ['https://perfect-bride.vercel.app'],
-            methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-            allowedHeaders: ["Authorization", "Content-Type"],
-            credentials: true,
-        };
-        this.app.use((0, cors_1.default)(corsOptions));
-        this.app.options('*', (0, cors_1.default)(corsOptions));
-        this.app.use((0, morgan_1.default)(this.morganFormat, {
-            stream: {
-                write: (message) => {
-                    const logObject = {
-                        method: message.split(" ")[0],
-                        url: message.split(" ")[1],
-                        status: message.split(" ")[2],
-                        responseTime: message.split(" ")[3],
-                    };
-                    logger_1.default.info(JSON.stringify(logObject));
-                },
-            },
-        }));
+        // const corsOptions = {
+        //     origin: ['https://perfect-bride.vercel.app', "*"],
+        //     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        //     allowedHeaders: ["Authorization", "Content-Type"],
+        //     credentials: true,
+        //   };
+        // this.app.use(cors(corsOptions));
+        // this.app.options('*',cors(corsOptions));
+        // this.app.use(
+        //     morgan(this.morganFormat, {
+        //       stream: {
+        //         write: (message) => {
+        //           const logObject = {
+        //             method: message.split(" ")[0],
+        //             url: message.split(" ")[1],
+        //             status: message.split(" ")[2],
+        //             responseTime: message.split(" ")[3],
+        //           };
+        //           logger.info(JSON.stringify(logObject));
+        //         },
+        //       },
+        //     })
+        //   );
     }
     configureRoutes() {
         console.log('Setting up routes...');

@@ -35,8 +35,7 @@ export class AdminRepository implements IAdminRepository{
         .limit(limit)
         .lean()
         .exec();
-
-        console.log(users,"users repository")
+        console.log(users)
       const total = await UserModel.countDocuments(); 
       return [users as unknown as UserType[], total]; 
     

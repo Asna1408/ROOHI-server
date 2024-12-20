@@ -18,10 +18,10 @@ class GetAllUserUseCase {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const [users, total] = yield this.iadminrepository.GetAllUsers(skip, limit);
-                console.log(users, "users usecase");
                 return { users, total };
             }
             catch (error) {
+                console.log(error);
                 throw new Error("error on fetching all user");
             }
         });
