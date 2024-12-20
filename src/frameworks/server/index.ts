@@ -33,30 +33,30 @@ export class ExpressServer {
         this.app.use(express.json());
         this.app.use(bodyParser.json());
         this.app.use(cookieParser());
-        // const corsOptions = {
-        //     origin: ['https://perfect-bride.vercel.app', "*"],
-        //     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        //     allowedHeaders: ["Authorization", "Content-Type"],
-        //     credentials: true,
-        //   };
-        // this.app.use(cors(corsOptions));
-        // this.app.options('*',cors(corsOptions));
+        const corsOptions = {
+            origin: ['https://perfect-bride.vercel.app'],
+            methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            allowedHeaders: ["Authorization", "Content-Type"],
+            credentials: true,
+          };
+        this.app.use(cors(corsOptions));
+        this.app.options('*',cors(corsOptions));
 
-        // this.app.use(
-        //     morgan(this.morganFormat, {
-        //       stream: {
-        //         write: (message) => {
-        //           const logObject = {
-        //             method: message.split(" ")[0],
-        //             url: message.split(" ")[1],
-        //             status: message.split(" ")[2],
-        //             responseTime: message.split(" ")[3],
-        //           };
-        //           logger.info(JSON.stringify(logObject));
-        //         },
-        //       },
-        //     })
-        //   );
+        this.app.use(
+            morgan(this.morganFormat, {
+              stream: {
+                write: (message) => {
+                  const logObject = {
+                    method: message.split(" ")[0],
+                    url: message.split(" ")[1],
+                    status: message.split(" ")[2],
+                    responseTime: message.split(" ")[3],
+                  };
+                  logger.info(JSON.stringify(logObject));
+                },
+              },
+            })
+          );
         
     }
     
