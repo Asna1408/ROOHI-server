@@ -35,10 +35,11 @@ export class AdminRepository implements IAdminRepository{
         .limit(limit)
         .lean()
         .exec();
-    
+
+        console.log(users,"users")
       const total = await UserModel.countDocuments(); 
-    
       return [users as unknown as UserType[], total]; 
+    
     }catch(error){
       throw new Error("Error occured Admin Login")
     }
